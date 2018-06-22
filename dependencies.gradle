@@ -1,0 +1,91 @@
+ext {
+    compileSdkVer = 27
+    minSdkVer = 14
+    targetSdkVer = 27
+
+    versionName = '0.9.0'
+    versionCode = '1'
+
+    // Kotlin
+    kotlinVer = '1.2.50'
+    androidKtxVer = '0.2'
+
+    // Support library
+    supportLibraryVer = '27.1.1'
+    constraintLayout = '1.0.2'
+
+    // Architecture components
+    archComponentsVer = '1.1.0'
+    lifecycleVer = "1.1.0"
+
+    // Reactive Extensions
+    rxJava2Ver = '2.1.10'
+    rxAndroid2Ver = '2.0.1'
+
+    conductorVer = '2.1.4'
+    conductorLifecycleVer = '0.1.1'
+
+    // Billing Client
+    billingClientVer = '1.1'
+
+    // Developer-related
+    timberVer = '4.7.0'
+
+    // Unit-tests
+    jUnitVer = '4.12'
+    mockitoVer = '2.15.0'
+    mockitoKotlinVer = '1.5.0'
+    jacocoVer = '0.1.2'
+    assertJVer = '3.9.0'
+
+    // Instrumentation tests
+    runnerVer = '1.0.1'
+    espressoCoreVer = '3.0.1'
+
+    // Dependencies
+    supportDependencies = [
+            appCompat       : "com.android.support:appcompat-v7:$supportLibraryVer",
+            support         : "com.android.support:support-v4:$supportLibraryVer",
+            design          : "com.android.support:design:$supportLibraryVer",
+    ]
+
+    kotlinDependencies = [
+            kotlinStdLib : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVer",
+            kotlinReflect: "org.jetbrains.kotlin:kotlin-reflect:$kotlinVer",
+            androidKtx   : "androidx.core:core-ktx:$androidKtxVer"
+    ]
+
+    developmentDependencies = [
+            timber        : "com.jakewharton.timber:timber:$timberVer",
+    ]
+
+    presentationDependencies = [
+            conductor          : "com.bluelinelabs:conductor:$conductorVer",
+            conductorSupport   : "com.bluelinelabs:conductor-support:$conductorVer",
+            conductorLifecycle : "com.bluelinelabs:conductor-archlifecycle:$conductorLifecycleVer",
+            lifecycleExtensions: "android.arch.lifecycle:extensions:$lifecycleVer",
+            lifecycleCompiler  : "android.arch.lifecycle:compiler:$lifecycleVer",
+    ]
+
+    dataDependencies = [
+            rxJava               : "io.reactivex.rxjava2:rxjava:$rxJava2Ver",
+            rxAndroid            : "io.reactivex.rxjava2:rxandroid:$rxAndroid2Ver",
+            billingClient        : "com.android.billingclient:billing:$billingClientVer"
+    ]
+
+    testDependencies = [
+            jUnit        : "junit:junit:$jUnitVer",
+            mockito      : "org.mockito:mockito-core:$mockitoVer",
+            mockitoKotlin: "com.nhaarman:mockito-kotlin:$mockitoKotlinVer",
+            assertJ      : "org.assertj:assertj-core:$assertJVer",
+            mockitoInline: "org.mockito:mockito-inline:$mockitoVer"
+    ]
+
+    androidTestDependencies = [
+            testRunner        : "com.android.support.test:runner:$runnerVer",
+            espressoCore      : "com.android.support.test.espresso:espresso-core:$espressoCoreVer",
+            testRules         : "com.android.support.test:rules:$runnerVer",
+            supportAnnotations: "com.android.support:support-annotations:$supportLibraryVer",
+            testArchCore      : "android.arch.core:core-testing:$archComponentsVer"
+    ]
+}

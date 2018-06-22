@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RxBilling</string>
+    <string name="launch_flow_service">Launch flow with service</string>
+    <string name="launch_flow_client">Launch flow with client</string>
+    <string name="load_purchases">Load purchases</string>
+    <string name="load_history">Load history</string>
+    <string name="load_details">Load details</string>
+</resources>

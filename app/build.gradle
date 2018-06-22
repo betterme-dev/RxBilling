@@ -1,0 +1,51 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    defaultConfig {
+        applicationId "com.gen.rxbilling.sample"
+        minSdkVersion minSdkVer
+        targetSdkVersion targetSdkVer
+        compileSdkVersion compileSdkVer
+        versionName rootProject.extensions.getByName("ext")["versionCode"]
+        versionName rootProject.extensions.getByName("ext")["versionName"]
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dexOptions {
+        preDexLibraries = false
+        jumboMode = true
+        javaMaxHeapSize "4g"
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':rxbilling')
+
+    implementation kotlinDependencies.kotlinStdLib
+    implementation dataDependencies.billingClient
+    implementation presentationDependencies.lifecycleExtensions
+    kapt presentationDependencies.lifecycleCompiler
+    implementation developmentDependencies.timber
+    implementation dataDependencies.rxJava
+    implementation dataDependencies.rxAndroid
+    implementation supportDependencies.appCompat
+
+    testImplementation testDependencies.jUnit
+    testImplementation testDependencies.mockito
+    testImplementation testDependencies.mockitoKotlin
+
+    androidTestImplementation androidTestDependencies.testRunner
+    androidTestImplementation androidTestDependencies.espressoCore
+}

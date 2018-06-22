@@ -1,0 +1,52 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+
+    defaultConfig {
+        minSdkVersion minSdkVer
+        targetSdkVersion targetSdkVer
+        compileSdkVersion compileSdkVer
+        versionName rootProject.extensions.getByName("ext")["versionCode"]
+        versionName rootProject.extensions.getByName("ext")["versionName"]
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            postprocessing {
+                removeUnusedCode false
+                removeUnusedResources false
+                obfuscate false
+                optimizeCode false
+                proguardFile 'proguard-rules.pro'
+            }
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation kotlinDependencies.kotlinStdLib
+    implementation dataDependencies.billingClient
+    implementation presentationDependencies.lifecycleExtensions
+    kapt presentationDependencies.lifecycleCompiler
+    implementation developmentDependencies.timber
+    implementation dataDependencies.rxJava
+    implementation dataDependencies.rxAndroid
+    compileOnly presentationDependencies.conductor
+    implementation supportDependencies.appCompat
+
+    testImplementation testDependencies.jUnit
+    testImplementation testDependencies.mockito
+    testImplementation testDependencies.mockitoKotlin
+
+    androidTestImplementation androidTestDependencies.testRunner
+    androidTestImplementation androidTestDependencies.espressoCore
+}
