@@ -2,6 +2,9 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'org.jetbrains.dokka-android'
 
 android {
 
@@ -9,8 +12,6 @@ android {
         minSdkVersion minSdkVer
         targetSdkVersion targetSdkVer
         compileSdkVersion compileSdkVer
-        versionName rootProject.extensions.getByName("ext")["versionCode"]
-        versionName rootProject.extensions.getByName("ext")["versionName"]
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -28,6 +29,11 @@ android {
         }
     }
 
+}
+
+dokka {
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/javadoc"
 }
 
 dependencies {
@@ -49,4 +55,96 @@ dependencies {
 
     androidTestImplementation androidTestDependencies.testRunner
     androidTestImplementation androidTestDependencies.espressoCore
+}
+
+def siteUrl = 'https://github.com/betterme-dev/RxBilling'      // Homepage URL of the library
+def gitUrl = 'https://github.com/betterme-dev/RxBilling.git'   // Git repository URL
+def issueUrl = 'https://github.com/betterme-dev/RxBilling/issues'   // Issues URL
+group = "com.gen"                                          // Maven Group ID for the artifact
+version = "1.0.0"
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+
+                // Library description here
+                name 'rxbilling'
+                description = 'Rx wrapper for Billing Library with connection management'
+                url siteUrl
+
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'dmytro-ostapovets'
+                        name 'Dmytro Ostapovets'
+                        email "dmytro.ostapovets@gen.tech"
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/javadoc"
+}
+
+task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = "organization-lib"
+        name = "com.ostapovets:mylibrary"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        issueTrackerUrl = issueUrl
+        userOrg = 'ostapovets'
+        licenses = ["Apache-2.0"]
+        publish = true
+        version {
+            name = '1.0.0'
+            desc = 'Billing library initial release'
+            released  = new Date()
+            vcsTag = '1.0.0'
+        }
+    }
 }
