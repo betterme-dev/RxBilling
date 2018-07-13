@@ -9,20 +9,20 @@ Rx wrapper for Billing Library with connection managment
 
 Add next lines to your Activity,  Fragment or any other lifecycle owner
 
-class MainActivity : AppCompatActivity() {
+    class MainActivity : AppCompatActivity() {
 
-    private lateinit var rxBilling: RxBilling
-    private lateinit var rxBillingFlow: RxBillingFlow
+        private lateinit var rxBilling: RxBilling
+        private lateinit var rxBillingFlow: RxBillingFlow
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        rxBilling = RxBillingImpl(BillingClientFactory(applicationContext))
-        rxBillingFlow = RxBillingFlow(applicationContext, BillingServiceFactory(this))
-        lifecycle.addObserver(BillingConnectionManager(rxBilling))
-        lifecycle.addObserver(BillingConnectionManager(rxBillingFlow))
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_main)
+            rxBilling = RxBillingImpl(BillingClientFactory(applicationContext))
+            rxBillingFlow = RxBillingFlow(applicationContext, BillingServiceFactory(this))
+            lifecycle.addObserver(BillingConnectionManager(rxBilling))
+            lifecycle.addObserver(BillingConnectionManager(rxBillingFlow))
+        }
     }
-}
 
 ## Observe Billing updates
 
