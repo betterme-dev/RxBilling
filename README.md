@@ -1,7 +1,11 @@
 # RxBilling
 Rx wrapper for Billing Library with connection managment
 
+# Download
+
  [ ![Download](https://api.bintray.com/packages/betterme/rxbilling/com.betterme%3Arxbilling/images/download.svg) ](https://bintray.com/betterme/rxbilling/com.betterme%3Arxbilling/_latestVersion)
+
+implementation 'com.betterme:rxbilling:$latestVesrion'
 
 # How to use
 
@@ -13,6 +17,8 @@ RxBillingFlow is a wrapper above InAppBillingService that allows to launch billi
 
 
 ## Connection management
+
+### BillingConnectionManager
 
 The entry point to Billing connection management is BillingConnectionManager, that connect and disconnect in onStart() / onStop() callbacks of your LifecycleOwner
 
@@ -32,6 +38,12 @@ Add next lines to your Activity,  Fragment or any other lifecycle owner
             lifecycle.addObserver(BillingConnectionManager(rxBillingFlow))
         }
     }
+
+### Retry / Repeat connection
+
+The default implementation of retry transformation is RepeatConnectionTransformer().
+
+You can provide your own transformer to BillingClientFactory and BillingServiceFactory
 
 ## Observe Billing updates
 
