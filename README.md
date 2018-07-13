@@ -174,3 +174,14 @@ updates observer will not be triggered
                     //handle details
                 }))
     }
+
+## Consume  product
+
+    private fun consume() {
+        disposable.add(rxBilling.consumeProduct("purchase_token")
+                .subscribe({
+                    //completed
+                }, {
+                    //handle error
+                }))
+    }
