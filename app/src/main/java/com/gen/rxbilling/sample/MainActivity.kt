@@ -52,8 +52,10 @@ class MainActivity : AppCompatActivity() {
         disposable.add(rxBilling.observeUpdates()
                 .subscribe({
                     Timber.d("observeUpdates $it")
+                    tvClientFlow.text = it.toString()
                 }, {
                     Timber.e(it)
+                    tvClientFlow.text = it.toString()
                 }))
     }
 
@@ -67,8 +69,10 @@ class MainActivity : AppCompatActivity() {
         disposable.add(rxBillingFlow.handleActivityResult(resultCode, data)
                 .subscribe({
                     Timber.d("onActivityResult $it")
+                    tvServiceFlow.text = it.toString()
                 }, {
                     Timber.e(it)
+                    tvServiceFlow.text = it.toString()
                 }))
     }
 
@@ -98,6 +102,7 @@ class MainActivity : AppCompatActivity() {
         disposable.add(rxBilling.getPurchases()
                 .subscribe({
                     Timber.d("getPurchases $it")
+                    tvPurchases.text = it.toString()
                 }, {
                     Timber.e(it)
                 }))
@@ -107,6 +112,7 @@ class MainActivity : AppCompatActivity() {
         disposable.add(rxBilling.getPurchaseHistory()
                 .subscribe({
                     Timber.d("getPurchaseHistory $it")
+                    tvHistory.text = it.toString()
                 }, {
                     Timber.e(it)
                 }))
@@ -116,6 +122,7 @@ class MainActivity : AppCompatActivity() {
         disposable.add(rxBilling.getPurchaseSkuDetails(listOf("your_id1", "your_id2"))
                 .subscribe({
                     Timber.d("loadDetails $it")
+                    tvDetails.text = it.toString()
                 }, {
                     Timber.e(it)
                 }))
