@@ -6,6 +6,8 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'org.jetbrains.dokka-android'
 
+def libraryVersionName = VERSION_NAME
+
 android {
 
     defaultConfig {
@@ -60,26 +62,27 @@ dependencies {
 def siteUrl = 'https://github.com/betterme-dev/RxBilling'      // Homepage URL of the library
 def gitUrl = 'https://github.com/betterme-dev/RxBilling.git'   // Git repository URL
 def issueUrl = 'https://github.com/betterme-dev/RxBilling/issues'   // Issues URL
-group = "com.gen"                                          // Maven Group ID for the artifact
-version = "1.0.0"
+group = GROUP                                          // Maven Group ID for the artifact
+version = libraryVersionName
 
 install {
     repositories.mavenInstaller {
         // This generates POM.xml with proper parameters
         pom {
             project {
-                packaging 'aar'
+                packaging POM_PACKAGING
 
-                // Library description here
-                name 'rxbilling'
-                description = 'Rx wrapper for Billing Library with connection management'
-                url siteUrl
+                // Add your description here
+                name POM_NAME
+                description = POM_DESCRIPTION
+                url SITE_URL
 
                 // Set your license
                 licenses {
                     license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        name POM_LICENCE_NAME
+                        url POM_LICENCE_URL
+                        distribution POM_LICENCE_DIST
                     }
                 }
                 developers {
@@ -132,19 +135,19 @@ bintray {
 
     configurations = ['archives']
     pkg {
-        repo = "organization-lib"
-        name = "com.ostapovets:mylibrary"
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        issueTrackerUrl = issueUrl
-        userOrg = 'ostapovets'
+        repo = "rxbilling"
+        name = "com.betterme:rxbilling"
+        websiteUrl = SITE_URL
+        vcsUrl = VCS_URL
+        issueTrackerUrl = VCS_ISSUES_URL
+        userOrg = 'betterme'
         licenses = ["Apache-2.0"]
         publish = true
         version {
-            name = '1.0.0'
-            desc = 'Billing library initial release'
+            name = libraryVersionName
+            desc = 'Billing library release $libraryVersionName'
             released  = new Date()
-            vcsTag = '1.0.0'
+            vcsTag = libraryVersionName
         }
     }
 }
