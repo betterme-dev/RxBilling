@@ -45,6 +45,10 @@ The default implementation of retry transformation is RepeatConnectionTransforme
 
 You can provide your own transformer to BillingClientFactory and BillingServiceFactory
 
+    val clientFactory = BillingClientFactory(this, FlowableTransformer { upstream ->
+        upstream.retry(2)
+    })
+
 ## Observe Billing updates
 
     override fun onStart() {
