@@ -6,7 +6,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'org.jetbrains.dokka-android'
 
-def libraryVersionName = VERSION_NAME
+def libraryVersionName = rootProject.extensions.getByName("ext")["versionName"]
 
 android {
 

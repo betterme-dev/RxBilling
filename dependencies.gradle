@@ -4,7 +4,7 @@ ext {
     targetSdkVer = 27
 
     versionCode = 1
-    versionName = '0.9.0'
+    versionName = '0.9.1'
 
     // Kotlin
     kotlinVer = '1.2.50'
