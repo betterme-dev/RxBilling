@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
 ## Launch Billing flow with RxBilling
 
-    The result of this operation will be delivered to your updates observer
+The result of this operation will be delivered to your updates observer
 
     private fun startFlowWithClient() {
            disposable.add(rxBilling.launchFlow(this, BillingFlowParams.newBuilder()
@@ -61,8 +61,8 @@ class MainActivity : AppCompatActivity() {
 
 ## Launch Billing flow with RxBillingFlow
 
-    The result of this operation will be delivered to onActivityResult() of your Activity or Fragment,
-    updates observer will not be triggered
+The result of this operation will be delivered to onActivityResult() of your Activity or Fragment,
+updates observer will not be triggered
 
     private fun startFlowWithClient() {
            disposable.add(rxBilling.launchFlow(this, BillingFlowParams.newBuilder()
