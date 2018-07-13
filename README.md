@@ -2,3 +2,88 @@
 Rx wrapper for Billing Library with connection managment
 
  [ ![Download](https://api.bintray.com/packages/betterme/rxbilling/com.betterme%3Arxbilling/images/download.svg) ](https://bintray.com/betterme/rxbilling/com.betterme%3Arxbilling/_latestVersion)
+
+# How to use
+
+## Connection management
+
+Add next lines to your Activity,  Fragment or any other lifecycle owner
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var rxBilling: RxBilling
+    private lateinit var rxBillingFlow: RxBillingFlow
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        rxBilling = RxBillingImpl(BillingClientFactory(applicationContext))
+        rxBillingFlow = RxBillingFlow(applicationContext, BillingServiceFactory(this))
+        lifecycle.addObserver(BillingConnectionManager(rxBilling))
+        lifecycle.addObserver(BillingConnectionManager(rxBillingFlow))
+    }
+}
+
+## Observe Billing updates
+
+    override fun onStart() {
+        super.onStart()
+        disposable.add(
+                rxBilling.observeUpdates()
+                .subscribe({
+                    //handle update here
+                }, {
+                    //handle error
+                })
+        )
+    }
+
+    override fun onStop() {
+        disposable.clear()
+        super.onStop()
+    }
+
+## Launch Billing flow with RxBilling
+
+    The result of this operation will be delivered to your updates observer
+
+    private fun startFlowWithClient() {
+           disposable.add(rxBilling.launchFlow(this, BillingFlowParams.newBuilder()
+                   .setSku("you_id")
+                   .setType(BillingClient.SkuType.SUBS)
+                   .build())
+                   .subscribe({
+                       Timber.d("startFlowWithClient")
+                   }, {
+                       Timber.e(it)
+                   }))
+        }
+
+## Launch Billing flow with RxBillingFlow
+
+    The result of this operation will be delivered to onActivityResult() of your Activity or Fragment,
+    updates observer will not be triggered
+
+    private fun startFlowWithClient() {
+           disposable.add(rxBilling.launchFlow(this, BillingFlowParams.newBuilder()
+                   .setSku("you_id")
+                   .setType(BillingClient.SkuType.SUBS)
+                   .build())
+                   .subscribe({
+                       Timber.d("startFlowWithClient")
+                   }, {
+                       Timber.e(it)
+                   }))
+        }
+
+## Handle Billing result with RxBillingFlow
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        disposable.add(rxBillingFlow.handleActivityResult(resultCode, data)
+                .subscribe({
+                    //handle purchase
+                }, {
+                    //handle error
+                }))
+    }
