@@ -6,9 +6,10 @@ Rx wrapper for Billing Library with connection managment
 # How to use
 
 ## RxBilling and RxBillingFlow
--RxBilling is a simple wrapper above [Google Billing library](https://developer.android.com/google/play/billing/billing_library.html).
+RxBilling is a simple wrapper above [Google Billing library](https://developer.android.com/google/play/billing/billing_library.html).
 Using RxBilling is preferable to RxBillingFlow in most cases (if you don't care about fine-grained events, and you don't know about this issue https://github.com/googlesamples/android-play-billing/issues/83).
--RxBillingFlow is a wrapper above InAppBillingService that allows to launch billing flow and handle result of onActivityResult() callback
+
+RxBillingFlow is a wrapper above InAppBillingService that allows to launch billing flow and handle result of onActivityResult() callback
 
 
 ## Connection management
