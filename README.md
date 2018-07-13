@@ -53,9 +53,9 @@ The result of this operation will be delivered to your updates observer
                    .setType(BillingClient.SkuType.SUBS)
                    .build())
                    .subscribe({
-                       Timber.d("startFlowWithClient")
+                       //flow started
                    }, {
-                       Timber.e(it)
+                      //handle error
                    }))
         }
 
@@ -70,9 +70,9 @@ updates observer will not be triggered
                    .setType(BillingClient.SkuType.SUBS)
                    .build())
                    .subscribe({
-                       Timber.d("startFlowWithClient")
+                       //flow started
                    }, {
-                       Timber.e(it)
+                       //handle error
                    }))
         }
 
@@ -85,5 +85,71 @@ updates observer will not be triggered
                     //handle purchase
                 }, {
                     //handle error
+                }))
+    }
+
+## Load owned products
+
+    private fun loadPurchases() {
+         disposable.add(rxBilling.getPurchases()
+                  .subscribe({
+                      //handle purchases
+                  }, {
+                      //handle error
+                  }))
+    }
+
+## Load owned subscriptions
+
+    private fun loadSubscriptions() {
+        disposable.add(rxBilling.getSubscriptions()
+                .subscribe({
+                    //handle purchases
+                }, {
+                   //handle error
+                }))
+    }
+
+## Load products history
+
+    private fun loadPurchasesHistory() {
+        disposable.add(rxBilling.getPurchaseHistory()
+                .subscribe({
+                    //handle purchases
+                }, {
+                    //handle error
+                }))
+    }
+
+## Load subscriptions history
+
+    private fun loadPurchasesHistory() {
+        disposable.add(rxBilling.getSubscriptionHistory()
+                .subscribe({
+                    //handle purchases
+                }, {
+                    //handle error
+                }))
+    }
+
+## Load product sku details
+
+    private fun loadPurchasesHistory() {
+        disposable.add(rxBilling.getPurchaseSkuDetails(listOf("your_id1", "your_id2"))
+                .subscribe({
+                    //handle details
+                }, {
+                     //handle details
+                }))
+    }
+
+## Load subscription sku details
+
+    private fun loadDetails() {
+        disposable.add(rxBilling.getSubscriptionSkuDetails(listOf("your_id1", "your_id2"))
+                .subscribe({
+                    //handle details
+                }, {
+                    //handle details
                 }))
     }
