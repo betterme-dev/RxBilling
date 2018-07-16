@@ -10,7 +10,7 @@ android {
         minSdkVersion minSdkVer
         targetSdkVersion targetSdkVer
         compileSdkVersion compileSdkVer
-        versionName rootProject.extensions.getByName("ext")["versionCode"]
+        versionCode rootProject.extensions.getByName("ext")["versionCode"]
         versionName rootProject.extensions.getByName("ext")["versionName"]
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
