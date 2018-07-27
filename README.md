@@ -190,3 +190,13 @@ updates observer will not be triggered
                     //handle error
                 }))
     }
+
+## AndroidX
+
+If you are going to migrate on AndroidX, please use
+
+    com.gen.rxbilling.lifecycle.androidx.BillingConnectionManager
+    
+and 
+
+    com.gen.rxbilling.flow.delegate.androidx.FragmentFlowDelegate
