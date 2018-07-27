@@ -1,22 +1,27 @@
 ext {
-    compileSdkVer = 27
+    compileSdkVer = 28
     minSdkVer = 14
-    targetSdkVer = 27
+    targetSdkVer = 28
 
     versionCode = 1
-    versionName = '0.9.1'
+    versionName = '0.9.2'
 
     // Kotlin
     kotlinVer = '1.2.50'
-    androidKtxVer = '0.2'
+    androidKtxVer = '1.0.0-alpha1'
 
     // Support library
-    supportLibraryVer = '27.1.1'
+    supportLibraryVer = '28.0.0-alpha1'
     constraintLayout = '1.0.2'
+
+    // AndroidX
+    xAppCompatVer = '1.0.0-alpha1'
+    xLifecycleVer = '2.0.0-alpha1'
+    xFragmentVer = '1.0.0-alpha1'
 
     // Architecture components
     archComponentsVer = '1.1.0'
-    lifecycleVer = "1.1.0"
+    lifecycleVer = "1.1.1"
 
     // Reactive Extensions
     rxJava2Ver = '2.1.10'
@@ -44,9 +49,16 @@ ext {
 
     // Dependencies
     supportDependencies = [
-            appCompat       : "com.android.support:appcompat-v7:$supportLibraryVer",
-            support         : "com.android.support:support-v4:$supportLibraryVer",
-            design          : "com.android.support:design:$supportLibraryVer",
+            appCompat: "com.android.support:appcompat-v7:$supportLibraryVer",
+            design   : "com.android.support:design:$supportLibraryVer",
+    ]
+
+    androidXdependencies = [
+            appCompat          : "androidx.appcompat:appcompat:$xAppCompatVer",
+            fragment           : "androidx.fragment:fragment:$xFragmentVer",
+            lifecycleRuntime   : "androidx.lifecycle:lifecycle-runtime:$xLifecycleVer",
+            lifecycleCompiler  : "androidx.lifecycle:lifecycle-compiler:$xLifecycleVer",
+            lifecycleExtensions: "androidx.lifecycle:lifecycle-extensions:$xLifecycleVer"
     ]
 
     kotlinDependencies = [
@@ -56,7 +68,7 @@ ext {
     ]
 
     developmentDependencies = [
-            timber        : "com.jakewharton.timber:timber:$timberVer",
+            timber: "com.jakewharton.timber:timber:$timberVer",
     ]
 
     presentationDependencies = [
@@ -68,9 +80,9 @@ ext {
     ]
 
     dataDependencies = [
-            rxJava               : "io.reactivex.rxjava2:rxjava:$rxJava2Ver",
-            rxAndroid            : "io.reactivex.rxjava2:rxandroid:$rxAndroid2Ver",
-            billingClient        : "com.android.billingclient:billing:$billingClientVer"
+            rxJava       : "io.reactivex.rxjava2:rxjava:$rxJava2Ver",
+            rxAndroid    : "io.reactivex.rxjava2:rxandroid:$rxAndroid2Ver",
+            billingClient: "com.android.billingclient:billing:$billingClientVer"
     ]
 
     testDependencies = [

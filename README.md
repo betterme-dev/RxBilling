@@ -6,6 +6,7 @@ Rx wrapper for Billing Library with connection management
  [ ![Download](https://api.bintray.com/packages/betterme/rxbilling/com.betterme%3Arxbilling/images/download.svg) ](https://bintray.com/betterme/rxbilling/com.betterme%3Arxbilling/_latestVersion)
 
     implementation 'com.betterme:rxbilling:$latestVersion'
+    implementation 'com.android.billingclient:billing:$billingClientVer'
 
 # How to use
 
