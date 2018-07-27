@@ -1,11 +1,12 @@
 # RxBilling
-Rx wrapper for Billing Library with connection managment
+Rx wrapper for Billing Library with connection management
 
 # Download
 
  [ ![Download](https://api.bintray.com/packages/betterme/rxbilling/com.betterme%3Arxbilling/images/download.svg) ](https://bintray.com/betterme/rxbilling/com.betterme%3Arxbilling/_latestVersion)
 
     implementation 'com.betterme:rxbilling:$latestVersion'
+    implementation 'com.android.billingclient:billing:$billingClientVer'
 
 # How to use
 
@@ -189,3 +190,13 @@ updates observer will not be triggered
                     //handle error
                 }))
     }
+
+## AndroidX
+
+If you are going to migrate on AndroidX, please use
+
+    com.gen.rxbilling.lifecycle.androidx.BillingConnectionManager
+    
+and 
+
+    com.gen.rxbilling.flow.delegate.androidx.FragmentFlowDelegate
