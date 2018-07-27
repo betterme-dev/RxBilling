@@ -1,13 +1,15 @@
-package com.gen.rxbilling.lifecycle
+package com.gen.rxbilling.lifecycle.androidx
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import com.gen.rxbilling.lifecycle.Connectable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
-class BillingConnectionManager<T>(private val connectable: Connectable<T>)
-    : LifecycleObserver {
+class BillingConnectionManager<T>(
+        private val connectable: Connectable<T>
+) : LifecycleObserver {
     private var disposable: Disposable? = null
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)

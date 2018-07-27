@@ -41,15 +41,19 @@ dokka {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation kotlinDependencies.kotlinStdLib
-    implementation dataDependencies.billingClient
-    implementation presentationDependencies.lifecycleExtensions
-    kapt presentationDependencies.lifecycleCompiler
     implementation developmentDependencies.timber
     implementation dataDependencies.rxJava
     implementation dataDependencies.rxAndroid
+    implementation dataDependencies.billingClient
+    implementation kotlinDependencies.kotlinStdLib
+
     compileOnly presentationDependencies.conductor
-    implementation supportDependencies.appCompat
+    compileOnly presentationDependencies.lifecycleExtensions
+    compileOnly androidXdependencies.lifecycleRuntime
+    compileOnly androidXdependencies.lifecycleExtensions
+
+    kapt presentationDependencies.lifecycleCompiler
+    kapt androidXdependencies.lifecycleCompiler
 
     testImplementation testDependencies.jUnit
     testImplementation testDependencies.mockito
@@ -146,7 +150,7 @@ bintray {
         version {
             name = libraryVersionName
             desc = 'Billing library release $libraryVersionName'
-            released  = new Date()
+            released = new Date()
             vcsTag = libraryVersionName
         }
     }

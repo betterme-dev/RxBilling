@@ -2,7 +2,7 @@
 apply from: 'dependencies.gradle'
 
 buildscript {
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.2.41'
     ext.maven_version = '1.5'
     ext.bintray_version = '1.7.2'
     ext.dokka_version = '0.9.16'

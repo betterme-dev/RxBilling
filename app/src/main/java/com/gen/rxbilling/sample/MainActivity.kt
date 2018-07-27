@@ -9,10 +9,10 @@ import com.gen.rxbilling.client.RxBilling
 import com.gen.rxbilling.client.RxBillingImpl
 import com.gen.rxbilling.connection.BillingClientFactory
 import com.gen.rxbilling.connection.BillingServiceFactory
-import com.gen.rxbilling.flow.ActivityFlowDelegate
+import com.gen.rxbilling.flow.delegate.ActivityFlowDelegate
 import com.gen.rxbilling.flow.BuyItemRequest
 import com.gen.rxbilling.flow.RxBillingFlow
-import com.gen.rxbilling.lifecycle.BillingConnectionManager
+import com.gen.rxbilling.lifecycle.arch.BillingConnectionManager
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
