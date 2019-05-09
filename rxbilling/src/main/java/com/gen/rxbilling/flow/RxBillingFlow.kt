@@ -86,7 +86,7 @@ class RxBillingFlow(
                 .ignoreElement()
     }
 
-    fun handleActivityResult(activityResultCode: Int, data: Intent?): Single<Purchase> {
+    fun handleActivityResult(data: Intent?): Single<Purchase> {
         return Single.create<Purchase> {
             if (it.isDisposed) return@create
             Timber.d("onActivityResult %s", data?.extras)
