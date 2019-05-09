@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.SkuDetails
 import com.gen.rxbilling.client.RxBilling
 import com.gen.rxbilling.client.RxBillingImpl
 import com.gen.rxbilling.connection.BillingClientFactory
@@ -44,6 +45,9 @@ class MainActivity : AppCompatActivity() {
         }
         btnLoadDetails.setOnClickListener {
             loadDetails()
+        }
+        btnAcknowledge.setOnClickListener {
+            acknowledge()
         }
     }
 
@@ -87,15 +91,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startFlowWithClient() {
-       disposable.add(rxBilling.launchFlow(this, BillingFlowParams.newBuilder()
-               .setSku("you_id")
-               .setType(BillingClient.SkuType.SUBS)
-               .build())
-               .subscribe({
-                   Timber.d("startFlowWithClient")
-               }, {
-                   Timber.e(it)
-               }))
+        disposable.add(rxBilling.launchFlow(this, BillingFlowParams.newBuilder()
+                .setSkuDetails(SkuDetails("{}"))
+                .build())
+                .subscribe({
+                    Timber.d("startFlowWithClient")
+                }, {
+                    Timber.e(it)
+                }))
     }
 
     private fun loadPurchases() {
@@ -123,6 +126,15 @@ class MainActivity : AppCompatActivity() {
                 .subscribe({
                     Timber.d("loadDetails $it")
                     tvDetails.text = it.toString()
+                }, {
+                    Timber.e(it)
+                }))
+    }
+
+    private fun acknowledge() {
+        disposable.add(rxBilling.acknowledge("token")
+                .subscribe({
+                    Timber.d("acknowledge success")
                 }, {
                     Timber.e(it)
                 }))

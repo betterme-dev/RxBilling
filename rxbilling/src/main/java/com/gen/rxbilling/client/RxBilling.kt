@@ -23,9 +23,9 @@ interface RxBilling : Connectable<BillingClient> {
 
     fun getSubscriptions(): Single<List<Purchase>>
 
-    fun getPurchaseHistory(): Single<List<Purchase>>
+    fun getPurchaseHistory(): Single<List<PurchaseHistoryRecord>>
 
-    fun getSubscriptionHistory(): Single<List<Purchase>>
+    fun getSubscriptionHistory(): Single<List<PurchaseHistoryRecord>>
 
     fun getPurchaseSkuDetails(ids: List<String>): Single<List<SkuDetails>>
 
@@ -34,6 +34,8 @@ interface RxBilling : Connectable<BillingClient> {
     fun launchFlow(activity: Activity, params: BillingFlowParams): Completable
 
     fun consumeProduct(purchaseToken: String): Completable
+
+    fun acknowledge(purchaseToken: String): Completable
 }
 
 class RxBillingImpl(billingFactory: BillingClientFactory)
@@ -41,11 +43,12 @@ class RxBillingImpl(billingFactory: BillingClientFactory)
 
     private val updateSubject = PublishSubject.create<PurchasesUpdate>()
 
-    private val updatedListener = PurchasesUpdatedListener { responseCode, purchases ->
-        Timber.d("$responseCode", "$purchases")
+    private val updatedListener = PurchasesUpdatedListener { result, purchases ->
+        Timber.d("$result", "$purchases")
+        val responseCode = result.responseCode
         val event = when (responseCode) {
-            BillingClient.BillingResponse.OK -> PurchasesUpdate.Success(responseCode, purchases.orEmpty())
-            BillingClient.BillingResponse.USER_CANCELED -> PurchasesUpdate.Canceled(responseCode, purchases.orEmpty())
+            BillingClient.BillingResponseCode.OK -> PurchasesUpdate.Success(responseCode, purchases.orEmpty())
+            BillingClient.BillingResponseCode.USER_CANCELED -> PurchasesUpdate.Canceled(responseCode, purchases.orEmpty())
             else -> PurchasesUpdate.Failed(responseCode, purchases.orEmpty())
         }
         updateSubject.onNext(event)
@@ -74,11 +77,11 @@ class RxBillingImpl(billingFactory: BillingClientFactory)
         return getBoughtItems(BillingClient.SkuType.SUBS)
     }
 
-    override fun getPurchaseHistory(): Single<List<Purchase>> {
+    override fun getPurchaseHistory(): Single<List<PurchaseHistoryRecord>> {
         return getHistory(BillingClient.SkuType.INAPP)
     }
 
-    override fun getSubscriptionHistory(): Single<List<Purchase>> {
+    override fun getSubscriptionHistory(): Single<List<PurchaseHistoryRecord>> {
         return getHistory(BillingClient.SkuType.SUBS)
     }
 
@@ -99,10 +102,10 @@ class RxBillingImpl(billingFactory: BillingClientFactory)
                 }
                 .firstOrError()
                 .flatMapCompletable {
-                    return@flatMapCompletable if (isSuccess(it)) {
+                    return@flatMapCompletable if (isSuccess(it.responseCode)) {
                         Completable.complete()
                     } else {
-                        Completable.error(BillingException.fromCode(it))
+                        Completable.error(BillingException.fromResult(it))
                     }
                 }
     }
@@ -111,13 +114,40 @@ class RxBillingImpl(billingFactory: BillingClientFactory)
         return connectionFlowable
                 .flatMap { client ->
                     Flowable.create<Int>({
-                        client.consumeAsync(purchaseToken) { responseCode, _ ->
+                        val params = ConsumeParams.newBuilder()
+                                .setPurchaseToken(purchaseToken)
+                                .build()
+                        client.consumeAsync(params) { result, _ ->
                             if (it.isCancelled) return@consumeAsync
+                            val responseCode = result.responseCode
                             if (isSuccess(responseCode)) {
                                 it.onNext(responseCode)
                                 it.onComplete()
                             } else {
-                                it.onError(BillingException.fromCode(responseCode))
+                                it.onError(BillingException.fromResult(result))
+                            }
+                        }
+                    }, BackpressureStrategy.LATEST)
+                }
+                .firstOrError()
+                .toCompletable()
+    }
+
+    override fun acknowledge(purchaseToken: String): Completable {
+        return connectionFlowable
+                .flatMap { client ->
+                    Flowable.create<Int>({
+                        client.acknowledgePurchase(AcknowledgePurchaseParams.newBuilder()
+                                .setPurchaseToken(purchaseToken)
+                                .build()
+                        ) { result ->
+                            if (it.isCancelled) return@acknowledgePurchase
+                            val responseCode = result.responseCode
+                            if (isSuccess(responseCode)) {
+                                it.onNext(responseCode)
+                                it.onComplete()
+                            } else {
+                                it.onError(BillingException.fromResult(result))
                             }
                         }
                     }, BackpressureStrategy.LATEST)
@@ -133,47 +163,52 @@ class RxBillingImpl(billingFactory: BillingClientFactory)
                     return@flatMap if (isSuccess(purchasesResult.responseCode)) {
                         Flowable.just(purchasesResult.purchasesList.orEmpty())
                     } else {
-                        Flowable.error<List<Purchase>>(BillingException.fromCode(purchasesResult.responseCode))
+                        Flowable.error<List<Purchase>>(BillingException.fromResult(purchasesResult.billingResult))
                     }
                 }.firstOrError()
     }
 
-    private fun getHistory(type: String): Single<List<Purchase>> {
+    private fun getHistory(type: String): Single<List<PurchaseHistoryRecord>> {
         return connectionFlowable
                 .flatMap { client ->
-                    Flowable.create<List<Purchase>>({
-                        client.queryPurchaseHistoryAsync(type, { responseCode: Int, mutableList: MutableList<Purchase>? ->
+                    Flowable.create<List<PurchaseHistoryRecord>>({
+                        client.queryPurchaseHistoryAsync(type) { billingResult: BillingResult, list: MutableList<PurchaseHistoryRecord>? ->
                             if (it.isCancelled) return@queryPurchaseHistoryAsync
+                            val responseCode = billingResult.responseCode
                             if (isSuccess(responseCode)) {
-                                it.onNext(mutableList.orEmpty())
+                                it.onNext(list.orEmpty())
                                 it.onComplete()
                             } else {
-                                it.onError(BillingException.fromCode(responseCode))
+                                it.onError(BillingException.fromResult(billingResult))
                             }
-                        })
+                        }
                     }, BackpressureStrategy.LATEST)
                 }.firstOrError()
     }
 
     private fun getSkuDetails(ids: List<String>, type: String): Single<List<SkuDetails>> {
-        val params = SkuDetailsParams.newBuilder().setSkusList(ids).setType(type).build()
+        val params = SkuDetailsParams.newBuilder()
+                .setSkusList(ids)
+                .setType(type)
+                .build()
         return connectionFlowable
                 .flatMap { client ->
                     Flowable.create<List<SkuDetails>>({
-                        client.querySkuDetailsAsync(params, { responseCode: Int, mutableList: MutableList<SkuDetails>? ->
+                        client.querySkuDetailsAsync(params) { billingResult, skuDetailsList ->
                             if (it.isCancelled) return@querySkuDetailsAsync
+                            val responseCode = billingResult.responseCode
                             if (isSuccess(responseCode)) {
-                                it.onNext(mutableList.orEmpty())
+                                it.onNext(skuDetailsList.orEmpty())
                                 it.onComplete()
                             } else {
-                                it.onError(BillingException.fromCode(responseCode))
+                                it.onError(BillingException.fromResult(billingResult))
                             }
-                        })
+                        }
                     }, BackpressureStrategy.LATEST)
                 }.firstOrError()
     }
 
     private fun isSuccess(responseCode: Int): Boolean {
-        return responseCode == BillingClient.BillingResponse.OK
+        return responseCode == BillingClient.BillingResponseCode.OK
     }
 }

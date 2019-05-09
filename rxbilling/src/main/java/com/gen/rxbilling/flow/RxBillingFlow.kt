@@ -4,9 +4,10 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.util.BillingHelper
-import com.android.billingclient.util.BillingHelper.RESPONSE_BUY_INTENT
+import com.android.billingclient.util.BillingHelper.RESPONSE_BUY_INTENT_KEY
 import com.android.vending.billing.IInAppBillingService
 import com.gen.rxbilling.connection.BillingServiceFactory
 import com.gen.rxbilling.exception.BillingException
@@ -38,18 +39,22 @@ class RxBillingFlow(
                             request.type,
                             /* developerPayload */ null)
                     val responseCode = BillingHelper.getResponseCodeFromBundle(buyIntentBundle, null)
-                    if (responseCode == BillingClient.BillingResponse.OK) {
-                        val pendingIntent: PendingIntent = buyIntentBundle.getParcelable(RESPONSE_BUY_INTENT)
+                    val responseMessage = BillingHelper.getDebugMessageFromBundle(buyIntentBundle, null)
+                    val billingResult = BillingResult.newBuilder()
+                            .setResponseCode(responseCode)
+                            .setDebugMessage(responseMessage)
+                            .build()
+                    if (responseCode == BillingClient.BillingResponseCode.OK) {
+                        val pendingIntent: PendingIntent = buyIntentBundle.getParcelable(RESPONSE_BUY_INTENT_KEY)!!
                         delegate.startFlow(pendingIntent, request.requestCode)
                         return@flatMap Flowable.just(responseCode)
                     } else {
-                        return@flatMap Flowable.error<Int>(BillingException.fromCode(responseCode))
+                        return@flatMap Flowable.error<Int>(BillingException.fromResult(billingResult))
                     }
                 }
                 .firstOrError()
                 .toCompletable()
     }
-
 
     fun replaceItem(request: ReplaceItemRequest, delegate: FlowDelegate): Completable {
         return connectionFlowable
@@ -64,12 +69,17 @@ class RxBillingFlow(
 
                     )
                     val responseCode = BillingHelper.getResponseCodeFromBundle(buyIntentBundle, null)
-                    if (responseCode == BillingClient.BillingResponse.OK) {
-                        val pendingIntent: PendingIntent = buyIntentBundle.getParcelable(RESPONSE_BUY_INTENT)
+                    val responseMessage = BillingHelper.getDebugMessageFromBundle(buyIntentBundle, null)
+                    val billingResult = BillingResult.newBuilder()
+                            .setResponseCode(responseCode)
+                            .setDebugMessage(responseMessage)
+                            .build()
+                    if (responseCode == BillingClient.BillingResponseCode.OK) {
+                        val pendingIntent: PendingIntent = buyIntentBundle.getParcelable(RESPONSE_BUY_INTENT_KEY)!!
                         delegate.startFlow(pendingIntent, request.requestCode)
                         return@flatMap Flowable.just(responseCode)
                     } else {
-                        return@flatMap Flowable.error<Int>(BillingException.fromCode(responseCode))
+                        return@flatMap Flowable.error<Int>(BillingException.fromResult(billingResult))
                     }
                 }
                 .firstOrError()
@@ -80,13 +90,14 @@ class RxBillingFlow(
         return Single.create<Purchase> {
             if (it.isDisposed) return@create
             Timber.d("onActivityResult %s", data?.extras)
-            val responseCode = BillingHelper.getResponseCodeFromIntent(data, null)
+            val billingResult = BillingHelper.getBillingResultFromIntent(data, null)
+            val responseCode = billingResult.responseCode
             when (responseCode) {
-                BillingClient.BillingResponse.OK -> {
+                BillingClient.BillingResponseCode.OK -> {
                     val purchases = BillingHelper.extractPurchases(data?.extras)
                     it.onSuccess(purchases[0])
                 }
-                else -> it.onError(BillingException.fromCode(responseCode))
+                else -> it.onError(BillingException.fromResult(billingResult))
             }
         }
     }

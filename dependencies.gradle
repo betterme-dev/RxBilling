@@ -31,7 +31,7 @@ ext {
     conductorLifecycleVer = '0.1.1'
 
     // Billing Client
-    billingClientVer = '1.1'
+    billingClientVer = '2.0.0'
 
     // Developer-related
     timberVer = '4.7.0'
