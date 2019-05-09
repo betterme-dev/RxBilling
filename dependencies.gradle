@@ -32,7 +32,7 @@ ext {
     // Unit-tests
     jUnitVer = '4.12'
     mockitoVer = '2.15.0'
-    mockitoKotlinVer = '1.5.0'
+    mockitoKotlinVer = '2.1.0'
     jacocoVer = '0.1.2'
     assertJVer = '3.9.0'
 
@@ -69,7 +69,7 @@ ext {
     testDependencies = [
             jUnit        : "junit:junit:$jUnitVer",
             mockito      : "org.mockito:mockito-core:$mockitoVer",
-            mockitoKotlin: "com.nhaarman:mockito-kotlin:$mockitoKotlinVer",
+            mockitoKotlin: "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVer",
             assertJ      : "org.assertj:assertj-core:$assertJVer",
             mockitoInline: "org.mockito:mockito-inline:$mockitoVer"
     ]
