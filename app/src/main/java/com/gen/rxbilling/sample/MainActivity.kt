@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         disposable.add(
-                rxBillingFlow.handleActivityResult(resultCode, data)
+                rxBillingFlow.handleActivityResult(data)
                         .subscribe({
                             Timber.d("onActivityResult $it")
                             tvServiceFlow.text = it.toString()
