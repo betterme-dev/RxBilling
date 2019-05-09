@@ -53,7 +53,7 @@ class RxBillingFlow(
                     }
                 }
                 .firstOrError()
-                .toCompletable()
+                .ignoreElement()
     }
 
     fun replaceItem(request: ReplaceItemRequest, delegate: FlowDelegate): Completable {
@@ -83,7 +83,7 @@ class RxBillingFlow(
                     }
                 }
                 .firstOrError()
-                .toCompletable()
+                .ignoreElement()
     }
 
     fun handleActivityResult(activityResultCode: Int, data: Intent?): Single<Purchase> {

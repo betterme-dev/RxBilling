@@ -11,7 +11,6 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 
 interface RxBilling : Connectable<BillingClient> {
 
@@ -27,24 +26,24 @@ interface RxBilling : Connectable<BillingClient> {
 
     fun getSubscriptionHistory(): Single<List<PurchaseHistoryRecord>>
 
-    fun getPurchaseSkuDetails(ids: List<String>): Single<List<SkuDetails>>
-
-    fun getSubscriptionSkuDetails(ids: List<String>): Single<List<SkuDetails>>
+    fun getSkuDetails(params: SkuDetailsParams): Single<List<SkuDetails>>
 
     fun launchFlow(activity: Activity, params: BillingFlowParams): Completable
 
-    fun consumeProduct(purchaseToken: String): Completable
+    fun consumeProduct(params: ConsumeParams): Completable
 
-    fun acknowledge(purchaseToken: String): Completable
+    fun acknowledge(params: AcknowledgePurchaseParams): Completable
+
+    fun loadRewarded(params: RewardLoadParams): Completable
 }
 
-class RxBillingImpl(billingFactory: BillingClientFactory)
-    : RxBilling {
+class RxBillingImpl(
+        billingFactory: BillingClientFactory
+) : RxBilling {
 
     private val updateSubject = PublishSubject.create<PurchasesUpdate>()
 
     private val updatedListener = PurchasesUpdatedListener { result, purchases ->
-        Timber.d("$result", "$purchases")
         val responseCode = result.responseCode
         val event = when (responseCode) {
             BillingClient.BillingResponseCode.OK -> PurchasesUpdate.Success(responseCode, purchases.orEmpty())
@@ -85,13 +84,22 @@ class RxBillingImpl(billingFactory: BillingClientFactory)
         return getHistory(BillingClient.SkuType.SUBS)
     }
 
-    override fun getPurchaseSkuDetails(ids: List<String>): Single<List<SkuDetails>> {
-        return getSkuDetails(ids, BillingClient.SkuType.INAPP)
-    }
-
-
-    override fun getSubscriptionSkuDetails(ids: List<String>): Single<List<SkuDetails>> {
-        return getSkuDetails(ids, BillingClient.SkuType.SUBS)
+    override fun getSkuDetails(params: SkuDetailsParams): Single<List<SkuDetails>> {
+        return connectionFlowable
+                .flatMap { client ->
+                    Flowable.create<List<SkuDetails>>({
+                        client.querySkuDetailsAsync(params) { billingResult, skuDetailsList ->
+                            if (it.isCancelled) return@querySkuDetailsAsync
+                            val responseCode = billingResult.responseCode
+                            if (isSuccess(responseCode)) {
+                                it.onNext(skuDetailsList.orEmpty())
+                                it.onComplete()
+                            } else {
+                                it.onError(BillingException.fromResult(billingResult))
+                            }
+                        }
+                    }, BackpressureStrategy.LATEST)
+                }.firstOrError()
     }
 
     override fun launchFlow(activity: Activity, params: BillingFlowParams): Completable {
@@ -110,13 +118,10 @@ class RxBillingImpl(billingFactory: BillingClientFactory)
                 }
     }
 
-    override fun consumeProduct(purchaseToken: String): Completable {
+    override fun consumeProduct(params : ConsumeParams): Completable {
         return connectionFlowable
                 .flatMap { client ->
                     Flowable.create<Int>({
-                        val params = ConsumeParams.newBuilder()
-                                .setPurchaseToken(purchaseToken)
-                                .build()
                         client.consumeAsync(params) { result, _ ->
                             if (it.isCancelled) return@consumeAsync
                             val responseCode = result.responseCode
@@ -130,17 +135,14 @@ class RxBillingImpl(billingFactory: BillingClientFactory)
                     }, BackpressureStrategy.LATEST)
                 }
                 .firstOrError()
-                .toCompletable()
+                .ignoreElement()
     }
 
-    override fun acknowledge(purchaseToken: String): Completable {
+    override fun acknowledge(params: AcknowledgePurchaseParams): Completable {
         return connectionFlowable
                 .flatMap { client ->
                     Flowable.create<Int>({
-                        client.acknowledgePurchase(AcknowledgePurchaseParams.newBuilder()
-                                .setPurchaseToken(purchaseToken)
-                                .build()
-                        ) { result ->
+                        client.acknowledgePurchase(params) { result ->
                             if (it.isCancelled) return@acknowledgePurchase
                             val responseCode = result.responseCode
                             if (isSuccess(responseCode)) {
@@ -153,7 +155,26 @@ class RxBillingImpl(billingFactory: BillingClientFactory)
                     }, BackpressureStrategy.LATEST)
                 }
                 .firstOrError()
-                .toCompletable()
+                .ignoreElement()
+    }
+
+    override fun loadRewarded(params: RewardLoadParams): Completable {
+        return connectionFlowable
+                .flatMap { client ->
+                    Flowable.create<Int>({
+                        client.loadRewardedSku(params) { result ->
+                            if (it.isCancelled) return@loadRewardedSku
+                            val responseCode = result.responseCode
+                            if (isSuccess(responseCode)) {
+                                it.onNext(result.responseCode)
+                                it.onComplete()
+                            } else {
+                                it.onError(BillingException.fromResult(result))
+                            }
+                        }
+                    }, BackpressureStrategy.LATEST)
+                }.firstOrError()
+                .ignoreElement()
     }
 
     private fun getBoughtItems(type: String): Single<List<Purchase>> {
@@ -177,28 +198,6 @@ class RxBillingImpl(billingFactory: BillingClientFactory)
                             val responseCode = billingResult.responseCode
                             if (isSuccess(responseCode)) {
                                 it.onNext(list.orEmpty())
-                                it.onComplete()
-                            } else {
-                                it.onError(BillingException.fromResult(billingResult))
-                            }
-                        }
-                    }, BackpressureStrategy.LATEST)
-                }.firstOrError()
-    }
-
-    private fun getSkuDetails(ids: List<String>, type: String): Single<List<SkuDetails>> {
-        val params = SkuDetailsParams.newBuilder()
-                .setSkusList(ids)
-                .setType(type)
-                .build()
-        return connectionFlowable
-                .flatMap { client ->
-                    Flowable.create<List<SkuDetails>>({
-                        client.querySkuDetailsAsync(params) { billingResult, skuDetailsList ->
-                            if (it.isCancelled) return@querySkuDetailsAsync
-                            val responseCode = billingResult.responseCode
-                            if (isSuccess(responseCode)) {
-                                it.onNext(skuDetailsList.orEmpty())
                                 it.onComplete()
                             } else {
                                 it.onError(BillingException.fromResult(billingResult))
