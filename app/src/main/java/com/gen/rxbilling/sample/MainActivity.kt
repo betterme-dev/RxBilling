@@ -82,8 +82,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun startFlowWithService() {
         disposable.add(
-                rxBillingFlow.buyItem(BuyItemRequest(BillingClient.SkuType.SUBS, "your_id", 101),
-                        ActivityFlowDelegate(this))
+                rxBillingFlow.buyItem(
+                        BuyItemRequest(BillingClient.SkuType.SUBS, "your_id", 101),
+                        ActivityFlowDelegate(this)
+                )
                         .subscribe({
                             Timber.d("flow started")
                         }, {
@@ -105,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadPurchases() {
         disposable.add(
-                rxBilling.getPurchases()
+                rxBilling.getPurchases(BillingClient.SkuType.SUBS)
                         .subscribe({
                             Timber.d("getPurchases $it")
                             tvPurchases.text = it.toString()
@@ -116,7 +118,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadHistory() {
         disposable.add(
-                rxBilling.getPurchaseHistory()
+                rxBilling.getPurchaseHistory(BillingClient.SkuType.SUBS)
                         .subscribe({
                             Timber.d("getPurchaseHistory $it")
                             tvHistory.text = it.toString()

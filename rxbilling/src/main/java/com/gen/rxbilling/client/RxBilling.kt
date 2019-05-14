@@ -18,13 +18,9 @@ interface RxBilling : Connectable<BillingClient> {
 
     fun observeUpdates(): Flowable<PurchasesUpdate>
 
-    fun getPurchases(): Single<List<Purchase>>
+    fun getPurchases(skuType: String): Single<List<Purchase>>
 
-    fun getSubscriptions(): Single<List<Purchase>>
-
-    fun getPurchaseHistory(): Single<List<PurchaseHistoryRecord>>
-
-    fun getSubscriptionHistory(): Single<List<PurchaseHistoryRecord>>
+    fun getPurchaseHistory(skuType: String): Single<List<PurchaseHistoryRecord>>
 
     fun getSkuDetails(params: SkuDetailsParams): Single<List<SkuDetails>>
 
@@ -68,20 +64,12 @@ class RxBillingImpl(
         }
     }
 
-    override fun getPurchases(): Single<List<Purchase>> {
-        return getBoughtItems(BillingClient.SkuType.INAPP)
+    override fun getPurchases(skuType: String): Single<List<Purchase>> {
+        return getBoughtItems(skuType)
     }
 
-    override fun getSubscriptions(): Single<List<Purchase>> {
-        return getBoughtItems(BillingClient.SkuType.SUBS)
-    }
-
-    override fun getPurchaseHistory(): Single<List<PurchaseHistoryRecord>> {
-        return getHistory(BillingClient.SkuType.INAPP)
-    }
-
-    override fun getSubscriptionHistory(): Single<List<PurchaseHistoryRecord>> {
-        return getHistory(BillingClient.SkuType.SUBS)
+    override fun getPurchaseHistory(skuType: String): Single<List<PurchaseHistoryRecord>> {
+        return getHistory(skuType)
     }
 
     override fun getSkuDetails(params: SkuDetailsParams): Single<List<SkuDetails>> {
@@ -118,7 +106,7 @@ class RxBillingImpl(
                 }
     }
 
-    override fun consumeProduct(params : ConsumeParams): Completable {
+    override fun consumeProduct(params: ConsumeParams): Completable {
         return connectionFlowable
                 .flatMap { client ->
                     Flowable.create<Int>({
