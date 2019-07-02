@@ -7,12 +7,11 @@ ext {
     versionName = '2.0.0'
 
     // Kotlin
-    kotlinVer = '1.3.31'
-    androidKtxVer = '1.0.1'
+    kotlinVer = '1.3.40'
+    androidKtxVer = '1.0.2'
 
     // Support library
-    supportLibraryVer = '28.0.0-alpha1'
-    constraintLayout = '1.0.2'
+    constraintLayout = '1.1.3'
 
     // AndroidX
     xAppCompatVer = '1.1.0-alpha05'
@@ -20,25 +19,25 @@ ext {
     xFragmentVer = '1.1.0-alpha08'
 
     // Reactive Extensions
-    rxJava2Ver = '2.2.8'
+    rxJava2Ver = '2.2.10'
     rxAndroid2Ver = '2.1.1'
 
     // Billing Client
-    billingClientVer = '2.0.0'
+    billingClientVer = '2.0.1'
 
     // Developer-related
     timberVer = '4.7.1'
 
     // Unit-tests
     jUnitVer = '4.12'
-    mockitoVer = '2.15.0'
+    mockitoVer = '2.28.2'
     mockitoKotlinVer = '2.1.0'
     jacocoVer = '0.1.2'
     assertJVer = '3.9.0'
 
     // Instrumentation tests
-    runnerVer = '1.0.1'
-    espressoCoreVer = '3.0.1'
+    runnerVer = '1.0.2'
+    espressoCoreVer = '3.0.2'
 
     // Dependencies
 
@@ -77,7 +76,6 @@ ext {
     androidTestDependencies = [
             testRunner        : "com.android.support.test:runner:$runnerVer",
             espressoCore      : "com.android.support.test.espresso:espresso-core:$espressoCoreVer",
-            testRules         : "com.android.support.test:rules:$runnerVer",
-            supportAnnotations: "com.android.support:support-annotations:$supportLibraryVer"
+            testRules         : "com.android.support.test:rules:$runnerVer"
     ]
 }
