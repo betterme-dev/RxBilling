@@ -46,6 +46,4 @@ dependencies {
     testImplementation testDependencies.mockito
     testImplementation testDependencies.mockitoKotlin
 
-    androidTestImplementation androidTestDependencies.testRunner
-    androidTestImplementation androidTestDependencies.espressoCore
 }

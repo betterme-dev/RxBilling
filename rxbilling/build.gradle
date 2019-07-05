@@ -57,8 +57,6 @@ dependencies {
     testImplementation testDependencies.mockito
     testImplementation testDependencies.mockitoKotlin
 
-    androidTestImplementation androidTestDependencies.testRunner
-    androidTestImplementation androidTestDependencies.espressoCore
 }
 
 def siteUrl = 'https://github.com/betterme-dev/RxBilling'      // Homepage URL of the library

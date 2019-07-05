@@ -35,10 +35,6 @@ ext {
     jacocoVer = '0.1.2'
     assertJVer = '3.9.0'
 
-    // Instrumentation tests
-    runnerVer = '1.0.2'
-    espressoCoreVer = '3.0.2'
-
     // Dependencies
 
     presentationDependencies = [
@@ -71,11 +67,5 @@ ext {
             mockitoKotlin: "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVer",
             assertJ      : "org.assertj:assertj-core:$assertJVer",
             mockitoInline: "org.mockito:mockito-inline:$mockitoVer"
-    ]
-
-    androidTestDependencies = [
-            testRunner        : "com.android.support.test:runner:$runnerVer",
-            espressoCore      : "com.android.support.test.espresso:espresso-core:$espressoCoreVer",
-            testRules         : "com.android.support.test:rules:$runnerVer"
     ]
 }
