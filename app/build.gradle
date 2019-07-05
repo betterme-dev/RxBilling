@@ -35,12 +35,12 @@ dependencies {
 
     implementation kotlinDependencies.kotlinStdLib
     implementation dataDependencies.billingClient
-    implementation androidXdependencies.lifecycleExtensions
-    kapt androidXdependencies.lifecycleCompiler
+    implementation presentationDependencies.lifecycleExtensions
+    kapt presentationDependencies.lifecycleCompiler
     implementation developmentDependencies.timber
     implementation dataDependencies.rxJava
     implementation dataDependencies.rxAndroid
-    implementation androidXdependencies.appCompat
+    implementation presentationDependencies.appCompat
 
     testImplementation testDependencies.jUnit
     testImplementation testDependencies.mockito

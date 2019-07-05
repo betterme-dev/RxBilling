@@ -47,11 +47,11 @@ dependencies {
     implementation dataDependencies.billingClient
     implementation kotlinDependencies.kotlinStdLib
 
-    compileOnly androidXdependencies.lifecycleExtensions
-    compileOnly androidXdependencies.lifecycleRuntime
-    compileOnly androidXdependencies.lifecycleExtensions
+    compileOnly presentationDependencies.lifecycleExtensions
+    compileOnly presentationDependencies.lifecycleRuntime
+    compileOnly presentationDependencies.lifecycleExtensions
 
-    kapt androidXdependencies.lifecycleCompiler
+    kapt presentationDependencies.lifecycleCompiler
 
     testImplementation testDependencies.jUnit
     testImplementation testDependencies.mockito

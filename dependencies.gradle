@@ -41,7 +41,7 @@ ext {
 
     // Dependencies
 
-    androidXdependencies = [
+    presentationDependencies = [
             appCompat          : "androidx.appcompat:appcompat:$xAppCompatVer",
             fragment           : "androidx.fragment:fragment:$xFragmentVer",
             lifecycleRuntime   : "androidx.lifecycle:lifecycle-runtime:$xLifecycleVer",
