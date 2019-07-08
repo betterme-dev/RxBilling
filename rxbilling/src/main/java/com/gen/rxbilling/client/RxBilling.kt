@@ -73,19 +73,18 @@ class RxBillingImpl(
 
     override fun getSkuDetails(params: SkuDetailsParams): Single<List<SkuDetails>> {
         return connectionFlowable
-                .flatMap { client ->
-                    Flowable.create<List<SkuDetails>>({
+                .flatMapSingle { client ->
+                    Single.create<List<SkuDetails>> {
                         client.querySkuDetailsAsync(params) { billingResult, skuDetailsList ->
-                            if (it.isCancelled) return@querySkuDetailsAsync
+                            if (it.isDisposed) return@querySkuDetailsAsync
                             val responseCode = billingResult.responseCode
                             if (isSuccess(responseCode)) {
-                                it.onNext(skuDetailsList.orEmpty())
-                                it.onComplete()
+                                it.onSuccess(skuDetailsList.orEmpty())
                             } else {
                                 it.onError(BillingException.fromResult(billingResult))
                             }
                         }
-                    }, BackpressureStrategy.LATEST)
+                    }
                 }.firstOrError()
     }
 
@@ -107,19 +106,18 @@ class RxBillingImpl(
 
     override fun consumeProduct(params: ConsumeParams): Completable {
         return connectionFlowable
-                .flatMap { client ->
-                    Flowable.create<Int>({
+                .flatMapSingle { client ->
+                    Single.create<Int> {
                         client.consumeAsync(params) { result, _ ->
-                            if (it.isCancelled) return@consumeAsync
+                            if (it.isDisposed) return@consumeAsync
                             val responseCode = result.responseCode
                             if (isSuccess(responseCode)) {
-                                it.onNext(responseCode)
-                                it.onComplete()
+                                it.onSuccess(responseCode)
                             } else {
                                 it.onError(BillingException.fromResult(result))
                             }
                         }
-                    }, BackpressureStrategy.LATEST)
+                    }
                 }
                 .firstOrError()
                 .ignoreElement()
@@ -127,19 +125,18 @@ class RxBillingImpl(
 
     override fun acknowledge(params: AcknowledgePurchaseParams): Completable {
         return connectionFlowable
-                .flatMap { client ->
-                    Flowable.create<Int>({
+                .flatMapSingle { client ->
+                    Single.create<Int> {
                         client.acknowledgePurchase(params) { result ->
-                            if (it.isCancelled) return@acknowledgePurchase
+                            if (it.isDisposed) return@acknowledgePurchase
                             val responseCode = result.responseCode
                             if (isSuccess(responseCode)) {
-                                it.onNext(responseCode)
-                                it.onComplete()
+                                it.onSuccess(responseCode)
                             } else {
                                 it.onError(BillingException.fromResult(result))
                             }
                         }
-                    }, BackpressureStrategy.LATEST)
+                    }
                 }
                 .firstOrError()
                 .ignoreElement()
@@ -147,50 +144,49 @@ class RxBillingImpl(
 
     override fun loadRewarded(params: RewardLoadParams): Completable {
         return connectionFlowable
-                .flatMap { client ->
-                    Flowable.create<Int>({
+                .flatMapSingle { client ->
+                    Single.create<Int> {
                         client.loadRewardedSku(params) { result ->
-                            if (it.isCancelled) return@loadRewardedSku
+                            if (it.isDisposed) return@loadRewardedSku
                             val responseCode = result.responseCode
                             if (isSuccess(responseCode)) {
-                                it.onNext(result.responseCode)
-                                it.onComplete()
+                                it.onSuccess(result.responseCode)
                             } else {
                                 it.onError(BillingException.fromResult(result))
                             }
                         }
-                    }, BackpressureStrategy.LATEST)
-                }.firstOrError()
+                    }
+                }
+                .firstOrError()
                 .ignoreElement()
     }
 
     private fun getBoughtItems(@BillingClient.SkuType type: String): Single<List<Purchase>> {
         return connectionFlowable
-                .flatMap {
+                .flatMapSingle {
                     val purchasesResult = it.queryPurchases(type)
-                    return@flatMap if (isSuccess(purchasesResult.responseCode)) {
-                        Flowable.just(purchasesResult.purchasesList.orEmpty())
+                    return@flatMapSingle if (isSuccess(purchasesResult.responseCode)) {
+                        Single.just(purchasesResult.purchasesList.orEmpty())
                     } else {
-                        Flowable.error<List<Purchase>>(BillingException.fromResult(purchasesResult.billingResult))
+                        Single.error(BillingException.fromResult(purchasesResult.billingResult))
                     }
                 }.firstOrError()
     }
 
     private fun getHistory(@BillingClient.SkuType type: String): Single<List<PurchaseHistoryRecord>> {
         return connectionFlowable
-                .flatMap { client ->
-                    Flowable.create<List<PurchaseHistoryRecord>>({
+                .flatMapSingle { client ->
+                    Single.create<List<PurchaseHistoryRecord>> {
                         client.queryPurchaseHistoryAsync(type) { billingResult: BillingResult, list: MutableList<PurchaseHistoryRecord>? ->
-                            if (it.isCancelled) return@queryPurchaseHistoryAsync
+                            if (it.isDisposed) return@queryPurchaseHistoryAsync
                             val responseCode = billingResult.responseCode
                             if (isSuccess(responseCode)) {
-                                it.onNext(list.orEmpty())
-                                it.onComplete()
+                                it.onSuccess(list.orEmpty())
                             } else {
                                 it.onError(BillingException.fromResult(billingResult))
                             }
                         }
-                    }, BackpressureStrategy.LATEST)
+                    }
                 }.firstOrError()
     }
 
