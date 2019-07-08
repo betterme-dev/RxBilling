@@ -18,9 +18,9 @@ interface RxBilling : Connectable<BillingClient> {
 
     fun observeUpdates(): Flowable<PurchasesUpdate>
 
-    fun getPurchases(skuType: String): Single<List<Purchase>>
+    fun getPurchases(@BillingClient.SkuType skuType: String): Single<List<Purchase>>
 
-    fun getPurchaseHistory(skuType: String): Single<List<PurchaseHistoryRecord>>
+    fun getPurchaseHistory(@BillingClient.SkuType skuType: String): Single<List<PurchaseHistoryRecord>>
 
     fun getSkuDetails(params: SkuDetailsParams): Single<List<SkuDetails>>
 
@@ -40,8 +40,7 @@ class RxBillingImpl(
     private val updateSubject = PublishSubject.create<PurchasesUpdate>()
 
     private val updatedListener = PurchasesUpdatedListener { result, purchases ->
-        val responseCode = result.responseCode
-        val event = when (responseCode) {
+        val event = when (val responseCode = result.responseCode) {
             BillingClient.BillingResponseCode.OK -> PurchasesUpdate.Success(responseCode, purchases.orEmpty())
             BillingClient.BillingResponseCode.USER_CANCELED -> PurchasesUpdate.Canceled(responseCode, purchases.orEmpty())
             else -> PurchasesUpdate.Failed(responseCode, purchases.orEmpty())
@@ -64,11 +63,11 @@ class RxBillingImpl(
         }
     }
 
-    override fun getPurchases(skuType: String): Single<List<Purchase>> {
+    override fun getPurchases(@BillingClient.SkuType skuType: String): Single<List<Purchase>> {
         return getBoughtItems(skuType)
     }
 
-    override fun getPurchaseHistory(skuType: String): Single<List<PurchaseHistoryRecord>> {
+    override fun getPurchaseHistory(@BillingClient.SkuType skuType: String): Single<List<PurchaseHistoryRecord>> {
         return getHistory(skuType)
     }
 
@@ -165,7 +164,7 @@ class RxBillingImpl(
                 .ignoreElement()
     }
 
-    private fun getBoughtItems(type: String): Single<List<Purchase>> {
+    private fun getBoughtItems(@BillingClient.SkuType type: String): Single<List<Purchase>> {
         return connectionFlowable
                 .flatMap {
                     val purchasesResult = it.queryPurchases(type)
@@ -177,7 +176,7 @@ class RxBillingImpl(
                 }.firstOrError()
     }
 
-    private fun getHistory(type: String): Single<List<PurchaseHistoryRecord>> {
+    private fun getHistory(@BillingClient.SkuType type: String): Single<List<PurchaseHistoryRecord>> {
         return connectionFlowable
                 .flatMap { client ->
                     Flowable.create<List<PurchaseHistoryRecord>>({
