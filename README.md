@@ -90,28 +90,33 @@ The result of this operation will be delivered to your updates observer
 The result of this operation will be delivered to onActivityResult() of your Activity or Fragment,
 updates observer will not be triggered
 
-    private fun startFlowWithClient() {
-           disposable.add(rxBilling.launchFlow(this, BillingFlowParams.newBuilder()
-                   .setSku("you_id")
-                   .setType(BillingClient.SkuType.SUBS)
-                   .build())
-                   .subscribe({
-                       //flow started
-                   }, {
-                       //handle error
-                   }))
-        }
+    private fun startFlowWithService() {
+        disposable.add(
+                rxBillingFlow.buyItem(
+                        BuyItemRequest(BillingClient.SkuType.SUBS, "your_id", 101),
+                        ActivityFlowDelegate(this)
+                )
+                        .subscribe({
+                            Timber.d("flow started")
+                        }, {
+                            Timber.e(it)
+                        }))
+    }
+
 
 ## Handle Billing result with RxBillingFlow
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        disposable.add(rxBillingFlow.handleActivityResult(resultCode, data)
-                .subscribe({
-                    //handle purchase
-                }, {
-                    //handle error
-                }))
+        disposable.add(
+                rxBillingFlow.handleActivityResult(data)
+                        .subscribe({
+                            Timber.d("onActivityResult $it")
+                            tvServiceFlow.text = it.toString()
+                        }, {
+                            Timber.e(it)
+                            tvServiceFlow.text = it.toString()
+                        }))
     }
 
 ## Load owned products
@@ -125,78 +130,73 @@ updates observer will not be triggered
                   }))
     }
 
-## Load owned subscriptions
+## Load owned purchases
 
-    private fun loadSubscriptions() {
-        disposable.add(rxBilling.getSubscriptions()
-                .subscribe({
-                    //handle purchases
-                }, {
-                   //handle error
-                }))
+    private fun loadPurchases() {
+        disposable.add(
+                rxBilling.getPurchases(BillingClient.SkuType.SUBS)
+                        .subscribe({
+                            Timber.d("getPurchases $it")
+                            tvPurchases.text = it.toString()
+                        }, {
+                            Timber.e(it)
+                        }))
     }
 
-## Load products history
+## Load history
 
-    private fun loadPurchasesHistory() {
-        disposable.add(rxBilling.getPurchaseHistory()
-                .subscribe({
-                    //handle purchases
-                }, {
-                    //handle error
-                }))
+    private fun loadHistory() {
+        disposable.add(
+                rxBilling.getPurchaseHistory(BillingClient.SkuType.SUBS)
+                        .subscribe({
+                            Timber.d("getPurchaseHistory $it")
+                            tvHistory.text = it.toString()
+                        }, {
+                            Timber.e(it)
+                        }))
     }
 
-## Load subscriptions history
-
-    private fun loadPurchasesHistory() {
-        disposable.add(rxBilling.getSubscriptionHistory()
-                .subscribe({
-                    //handle purchases
-                }, {
-                    //handle error
-                }))
-    }
-
-## Load product sku details
-
-    private fun loadPurchasesHistory() {
-        disposable.add(rxBilling.getPurchaseSkuDetails(listOf("your_id1", "your_id2"))
-                .subscribe({
-                    //handle details
-                }, {
-                     //handle details
-                }))
-    }
-
-## Load subscription sku details
+## Load sku details
 
     private fun loadDetails() {
-        disposable.add(rxBilling.getSubscriptionSkuDetails(listOf("your_id1", "your_id2"))
-                .subscribe({
-                    //handle details
-                }, {
-                    //handle details
-                }))
+        disposable.add(
+                rxBilling.getSkuDetails(
+                        SkuDetailsParams.newBuilder()
+                                .setSkusList(listOf("your_id1", "your_id2"))
+                                .setType(BillingClient.SkuType.SUBS)
+                                .build())
+                        .subscribe({
+                            Timber.d("loadDetails $it")
+                            tvDetails.text = it.toString()
+                        }, {
+                            Timber.e(it)
+                        }))
     }
 
 ## Consume  product
 
     private fun consume() {
-        disposable.add(rxBilling.consumeProduct("purchase_token")
-                .subscribe({
-                    //completed
-                }, {
-                    //handle error
-                }))
+        disposable.add(
+                rxBilling.consumeProduct(
+                        ConsumeParams.newBuilder()
+                                .setPurchaseToken("token")
+                                .build())
+                        .subscribe()
+        )
     }
-
-## AndroidX
-
-If you are going to migrate on AndroidX, please use
-
-    com.gen.rxbilling.lifecycle.androidx.BillingConnectionManager
     
-and 
-
-    com.gen.rxbilling.flow.delegate.androidx.FragmentFlowDelegate
+## Acknowledge item
+    
+    private fun acknowledge() {
+        disposable.add(
+                rxBilling.acknowledge(
+                        AcknowledgePurchaseParams.newBuilder()
+                                .setPurchaseToken("token")
+                                .setDeveloperPayload("payload")
+                                .build())
+                        .subscribe({
+                            Timber.d("acknowledge success")
+                        }, {
+                            Timber.e(it)
+                        }))
+    }

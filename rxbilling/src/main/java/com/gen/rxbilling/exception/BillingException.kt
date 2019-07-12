@@ -1,38 +1,38 @@
 package com.gen.rxbilling.exception
 
 import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingResult
 
-sealed class BillingException(open val code: Int) :
-        Exception("Billing error, code $code") {
+sealed class BillingException(result: BillingResult) :
+        Exception("Billing error, code ${result.responseCode}\n${result.debugMessage}") {
 
     companion object {
-        fun fromCode(code: Int): BillingException {
-            return when (code) {
-                BillingClient.BillingResponse.FEATURE_NOT_SUPPORTED -> FeatureNotSupportedException()
-                BillingClient.BillingResponse.SERVICE_DISCONNECTED -> ServiceDisconnectedException()
-                BillingClient.BillingResponse.USER_CANCELED -> UserCanceledException()
-                BillingClient.BillingResponse.SERVICE_UNAVAILABLE -> ServiceUnavailableException()
-                BillingClient.BillingResponse.BILLING_UNAVAILABLE -> BillingUnavailableException()
-                BillingClient.BillingResponse.ITEM_UNAVAILABLE -> ItemUnavailableException()
-                BillingClient.BillingResponse.DEVELOPER_ERROR -> DeveloperErrorException()
-                BillingClient.BillingResponse.ERROR -> FatalException()
-                BillingClient.BillingResponse.ITEM_ALREADY_OWNED -> AlreadyOwnedException()
-                BillingClient.BillingResponse.ITEM_NOT_OWNED -> NotOwnedException()
-                else -> UnknownException(code)
+        fun fromResult(result: BillingResult): BillingException {
+            return when (result.responseCode) {
+                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> FeatureNotSupportedException(result)
+                BillingClient.BillingResponseCode.SERVICE_DISCONNECTED -> ServiceDisconnectedException(result)
+                BillingClient.BillingResponseCode.USER_CANCELED -> UserCanceledException(result)
+                BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> ServiceUnavailableException(result)
+                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> BillingUnavailableException(result)
+                BillingClient.BillingResponseCode.ITEM_UNAVAILABLE -> ItemUnavailableException(result)
+                BillingClient.BillingResponseCode.DEVELOPER_ERROR -> DeveloperErrorException(result)
+                BillingClient.BillingResponseCode.ERROR -> FatalException(result)
+                BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> AlreadyOwnedException(result)
+                BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> NotOwnedException(result)
+                else -> UnknownException(result)
             }
         }
     }
 
-
-    class FeatureNotSupportedException : BillingException(BillingClient.BillingResponse.FEATURE_NOT_SUPPORTED)
-    class ServiceDisconnectedException : BillingException(BillingClient.BillingResponse.SERVICE_DISCONNECTED)
-    class UserCanceledException : BillingException(BillingClient.BillingResponse.USER_CANCELED)
-    class ServiceUnavailableException : BillingException(BillingClient.BillingResponse.SERVICE_UNAVAILABLE)
-    class BillingUnavailableException : BillingException(BillingClient.BillingResponse.BILLING_UNAVAILABLE)
-    class ItemUnavailableException : BillingException(BillingClient.BillingResponse.ITEM_UNAVAILABLE)
-    class DeveloperErrorException : BillingException(BillingClient.BillingResponse.DEVELOPER_ERROR)
-    class FatalException : BillingException(BillingClient.BillingResponse.ERROR)
-    class AlreadyOwnedException : BillingException(BillingClient.BillingResponse.ITEM_ALREADY_OWNED)
-    class NotOwnedException : BillingException(BillingClient.BillingResponse.ITEM_NOT_OWNED)
-    class UnknownException(code: Int) : BillingException(code)
+    class FeatureNotSupportedException(result: BillingResult) : BillingException(result)
+    class ServiceDisconnectedException(result: BillingResult) : BillingException(result)
+    class UserCanceledException(result: BillingResult) : BillingException(result)
+    class ServiceUnavailableException(result: BillingResult) : BillingException(result)
+    class BillingUnavailableException(result: BillingResult) : BillingException(result)
+    class ItemUnavailableException(result: BillingResult) : BillingException(result)
+    class DeveloperErrorException(result: BillingResult) : BillingException(result)
+    class FatalException(result: BillingResult) : BillingException(result)
+    class AlreadyOwnedException(result: BillingResult) : BillingException(result)
+    class NotOwnedException(result: BillingResult) : BillingException(result)
+    class UnknownException(result: BillingResult) : BillingException((result))
 }

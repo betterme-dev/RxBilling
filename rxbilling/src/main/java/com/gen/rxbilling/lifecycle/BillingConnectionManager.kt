@@ -1,9 +1,8 @@
-package com.gen.rxbilling.lifecycle.androidx
+package com.gen.rxbilling.lifecycle
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import com.gen.rxbilling.lifecycle.Connectable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
