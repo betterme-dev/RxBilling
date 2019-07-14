@@ -5,4 +5,5 @@
     <string name="load_purchases">Load purchases</string>
     <string name="load_history">Load history</string>
     <string name="load_details">Load details</string>
+    <string name="acknowledge">Acknowledge</string>
 </resources>

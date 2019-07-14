@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingResult
 import com.android.vending.billing.IInAppBillingService
 import com.gen.rxbilling.exception.BillingException
 import io.reactivex.BackpressureStrategy
@@ -50,7 +52,12 @@ class BillingServiceFactory(private val context: Context,
             }
             val bindService = context.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
             if (!bindService && !emitter.isCancelled) {
-                emitter.onError(BillingException.BillingUnavailableException())
+                emitter.onError(BillingException.BillingUnavailableException(
+                        BillingResult.newBuilder()
+                                .setResponseCode(BillingClient.BillingResponseCode.BILLING_UNAVAILABLE)
+                                .setDebugMessage("")
+                                .build()
+                ))
                 return@create
             }
             emitter.setCancellable {

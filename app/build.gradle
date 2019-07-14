@@ -40,12 +40,10 @@ dependencies {
     implementation developmentDependencies.timber
     implementation dataDependencies.rxJava
     implementation dataDependencies.rxAndroid
-    implementation supportDependencies.appCompat
+    implementation presentationDependencies.appCompat
 
     testImplementation testDependencies.jUnit
     testImplementation testDependencies.mockito
     testImplementation testDependencies.mockitoKotlin
 
-    androidTestImplementation androidTestDependencies.testRunner
-    androidTestImplementation androidTestDependencies.espressoCore
 }

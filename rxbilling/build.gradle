@@ -47,20 +47,16 @@ dependencies {
     implementation dataDependencies.billingClient
     implementation kotlinDependencies.kotlinStdLib
 
-    compileOnly presentationDependencies.conductor
     compileOnly presentationDependencies.lifecycleExtensions
-    compileOnly androidXdependencies.lifecycleRuntime
-    compileOnly androidXdependencies.lifecycleExtensions
+    compileOnly presentationDependencies.lifecycleRuntime
+    compileOnly presentationDependencies.lifecycleExtensions
 
     kapt presentationDependencies.lifecycleCompiler
-    kapt androidXdependencies.lifecycleCompiler
 
     testImplementation testDependencies.jUnit
     testImplementation testDependencies.mockito
     testImplementation testDependencies.mockitoKotlin
 
-    androidTestImplementation androidTestDependencies.testRunner
-    androidTestImplementation androidTestDependencies.espressoCore
 }
 
 def siteUrl = 'https://github.com/betterme-dev/RxBilling'      // Homepage URL of the library
@@ -108,7 +104,7 @@ install {
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+    archiveClassifier.set('sources')
 }
 
 task javadoc(type: Javadoc) {
@@ -122,7 +118,7 @@ task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
 }
 
 task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from javadoc.destinationDir
 }
 artifacts {
