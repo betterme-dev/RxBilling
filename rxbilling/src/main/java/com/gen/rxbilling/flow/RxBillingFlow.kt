@@ -37,7 +37,7 @@ class RxBillingFlow(
                             context.packageName,
                             request.id,
                             request.type,
-                            /* developerPayload */ null)
+                            request.developerPayload)
                     val responseCode = BillingHelper.getResponseCodeFromBundle(buyIntentBundle, null)
                     val responseMessage = BillingHelper.getDebugMessageFromBundle(buyIntentBundle, null)
                     val billingResult = BillingResult.newBuilder()
@@ -65,7 +65,7 @@ class RxBillingFlow(
                             listOf(request.oldId),
                             request.newId,
                             BillingClient.SkuType.SUBS,
-                            /* developerPayload */ null
+                            request.developerPayload
 
                     )
                     val responseCode = BillingHelper.getResponseCodeFromBundle(buyIntentBundle, null)
