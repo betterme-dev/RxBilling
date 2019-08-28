@@ -12,7 +12,7 @@ android {
         compileSdkVersion compileSdkVer
         versionCode rootProject.extensions.getByName("ext")["versionCode"]
         versionName rootProject.extensions.getByName("ext")["versionName"]
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.ext.junit.runners.AndroidJUnit4"
     }
     buildTypes {
         release {
@@ -45,5 +45,7 @@ dependencies {
     testImplementation testDependencies.jUnit
     testImplementation testDependencies.mockito
     testImplementation testDependencies.mockitoKotlin
-
+    androidTestImplementation testDependencies.runner
+    androidTestImplementation testDependencies.rules
+    androidTestImplementation testDependencies.ext
 }
