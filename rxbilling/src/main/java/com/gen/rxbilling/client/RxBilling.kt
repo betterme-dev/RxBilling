@@ -2,6 +2,7 @@ package com.gen.rxbilling.client
 
 import android.app.Activity
 import com.android.billingclient.api.*
+import com.android.billingclient.api.BillingClient.FeatureType
 import com.gen.rxbilling.connection.BillingClientFactory
 import com.gen.rxbilling.exception.BillingException
 import com.gen.rxbilling.lifecycle.Connectable
@@ -15,6 +16,8 @@ import io.reactivex.subjects.PublishSubject
 interface RxBilling : Connectable<BillingClient> {
 
     override fun connect(): Flowable<BillingClient>
+
+    fun isFeatureSupported(@FeatureType feature: String): Single<Boolean>
 
     fun observeUpdates(): Flowable<PurchasesUpdate>
 
@@ -55,6 +58,15 @@ class RxBillingImpl(
 
     override fun connect(): Flowable<BillingClient> {
         return connectionFlowable
+    }
+
+    override fun isFeatureSupported(@FeatureType feature: String): Single<Boolean> {
+        return connectionFlowable.flatMapSingle {
+            Single.defer {
+                val result = it.isFeatureSupported(feature)
+                Single.just(result.responseCode == BillingClient.BillingResponseCode.OK)
+            }
+        }.firstOrError()
     }
 
     override fun observeUpdates(): Flowable<PurchasesUpdate> {
