@@ -2,6 +2,7 @@ package com.gen.rxbilling.client
 
 import android.app.Activity
 import com.android.billingclient.api.*
+import com.android.billingclient.api.BillingClient.FeatureType
 import com.gen.rxbilling.connection.BillingClientFactory
 import com.gen.rxbilling.exception.BillingException
 import com.gen.rxbilling.lifecycle.Connectable
@@ -16,6 +17,8 @@ interface RxBilling : Connectable<BillingClient> {
 
     override fun connect(): Flowable<BillingClient>
 
+    fun isFeatureSupported(@FeatureType feature: String): Single<Boolean>
+
     fun observeUpdates(): Flowable<PurchasesUpdate>
 
     fun getPurchases(@BillingClient.SkuType skuType: String): Single<List<Purchase>>
@@ -29,8 +32,6 @@ interface RxBilling : Connectable<BillingClient> {
     fun consumeProduct(params: ConsumeParams): Completable
 
     fun acknowledge(params: AcknowledgePurchaseParams): Completable
-
-    fun loadRewarded(params: RewardLoadParams): Completable
 }
 
 class RxBillingImpl(
@@ -55,6 +56,15 @@ class RxBillingImpl(
 
     override fun connect(): Flowable<BillingClient> {
         return connectionFlowable
+    }
+
+    override fun isFeatureSupported(@FeatureType feature: String): Single<Boolean> {
+        return connectionFlowable.flatMapSingle {
+            Single.defer {
+                val result = it.isFeatureSupported(feature)
+                Single.just(result.responseCode == BillingClient.BillingResponseCode.OK)
+            }
+        }.firstOrError()
     }
 
     override fun observeUpdates(): Flowable<PurchasesUpdate> {
@@ -132,25 +142,6 @@ class RxBillingImpl(
                             val responseCode = result.responseCode
                             if (isSuccess(responseCode)) {
                                 it.onSuccess(responseCode)
-                            } else {
-                                it.onError(BillingException.fromResult(result))
-                            }
-                        }
-                    }
-                }
-                .firstOrError()
-                .ignoreElement()
-    }
-
-    override fun loadRewarded(params: RewardLoadParams): Completable {
-        return connectionFlowable
-                .flatMapSingle { client ->
-                    Single.create<Int> {
-                        client.loadRewardedSku(params) { result ->
-                            if (it.isDisposed) return@loadRewardedSku
-                            val responseCode = result.responseCode
-                            if (isSuccess(responseCode)) {
-                                it.onSuccess(result.responseCode)
                             } else {
                                 it.onError(BillingException.fromResult(result))
                             }

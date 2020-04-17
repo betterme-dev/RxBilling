@@ -14,10 +14,10 @@ import io.reactivex.Flowable
 import io.reactivex.FlowableTransformer
 import timber.log.Timber
 
-class BillingServiceFactory(private val context: Context,
-                            private val transformer:
-                            FlowableTransformer<IInAppBillingService, IInAppBillingService>
-                            = RepeatConnectionTransformer()) {
+class BillingServiceFactory(
+        private val context: Context,
+        private val transformer: FlowableTransformer<IInAppBillingService, IInAppBillingService>
+        = RepeatConnectionTransformer()) {
 
     companion object {
         private const val BIND_ACTION = "com.android.vending.billing.InAppBillingService.BIND"
