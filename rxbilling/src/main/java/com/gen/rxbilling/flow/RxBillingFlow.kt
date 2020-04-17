@@ -37,7 +37,7 @@ class RxBillingFlow(
                             context.packageName,
                             request.id,
                             request.type,
-                            /* developerPayload */ null)
+                            request.developerPayload)
                     val responseCode = BillingHelper.getResponseCodeFromBundle(buyIntentBundle, null)
                     val responseMessage = BillingHelper.getDebugMessageFromBundle(buyIntentBundle, null)
                     val billingResult = BillingResult.newBuilder()
@@ -65,7 +65,7 @@ class RxBillingFlow(
                             listOf(request.oldId),
                             request.newId,
                             BillingClient.SkuType.SUBS,
-                            /* developerPayload */ null
+                            request.developerPayload
 
                     )
                     val responseCode = BillingHelper.getResponseCodeFromBundle(buyIntentBundle, null)
@@ -87,12 +87,11 @@ class RxBillingFlow(
     }
 
     fun handleActivityResult(data: Intent?): Single<Purchase> {
-        return Single.create<Purchase> {
+        return Single.create {
             if (it.isDisposed) return@create
             Timber.d("onActivityResult %s", data?.extras)
             val billingResult = BillingHelper.getBillingResultFromIntent(data, null)
-            val responseCode = billingResult.responseCode
-            when (responseCode) {
+            when (billingResult.responseCode) {
                 BillingClient.BillingResponseCode.OK -> {
                     val purchases = BillingHelper.extractPurchases(data?.extras)
                     it.onSuccess(purchases[0])

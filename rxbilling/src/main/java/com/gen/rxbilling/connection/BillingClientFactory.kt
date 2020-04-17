@@ -11,9 +11,10 @@ import io.reactivex.Flowable
 import io.reactivex.FlowableTransformer
 import timber.log.Timber
 
-class BillingClientFactory(private val context: Context,
-                           private val transformer: FlowableTransformer<BillingClient, BillingClient>
-                           = RepeatConnectionTransformer()
+class BillingClientFactory(
+        private val context: Context,
+        private val transformer: FlowableTransformer<BillingClient, BillingClient>
+        = RepeatConnectionTransformer()
 ) {
 
     fun createBillingFlowable(listener: PurchasesUpdatedListener): Flowable<BillingClient> {

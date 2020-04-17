@@ -75,7 +75,7 @@ The result of this operation will be delivered to your updates observer
 
     private fun startFlowWithClient() {
            disposable.add(rxBilling.launchFlow(this, BillingFlowParams.newBuilder()
-                   .setSku("you_id")
+                   .setSkuDetails(SkuDetails) // see ## Load sku details
                    .setType(BillingClient.SkuType.SUBS)
                    .build())
                    .subscribe({
