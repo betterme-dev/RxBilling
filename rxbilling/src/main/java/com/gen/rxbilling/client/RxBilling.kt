@@ -29,8 +29,6 @@ interface RxBilling : Connectable<BillingClient> {
     fun consumeProduct(params: ConsumeParams): Completable
 
     fun acknowledge(params: AcknowledgePurchaseParams): Completable
-
-    fun loadRewarded(params: RewardLoadParams): Completable
 }
 
 class RxBillingImpl(
@@ -132,25 +130,6 @@ class RxBillingImpl(
                             val responseCode = result.responseCode
                             if (isSuccess(responseCode)) {
                                 it.onSuccess(responseCode)
-                            } else {
-                                it.onError(BillingException.fromResult(result))
-                            }
-                        }
-                    }
-                }
-                .firstOrError()
-                .ignoreElement()
-    }
-
-    override fun loadRewarded(params: RewardLoadParams): Completable {
-        return connectionFlowable
-                .flatMapSingle { client ->
-                    Single.create<Int> {
-                        client.loadRewardedSku(params) { result ->
-                            if (it.isDisposed) return@loadRewardedSku
-                            val responseCode = result.responseCode
-                            if (isSuccess(responseCode)) {
-                                it.onSuccess(result.responseCode)
                             } else {
                                 it.onError(BillingException.fromResult(result))
                             }
