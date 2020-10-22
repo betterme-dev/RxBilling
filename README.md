@@ -148,7 +148,6 @@ The result of this operation will be delivered to your updates observer
                 rxBilling.acknowledge(
                         AcknowledgePurchaseParams.newBuilder()
                                 .setPurchaseToken("token")
-                                .setDeveloperPayload("payload")
                                 .build())
                         .subscribe({
                             Timber.d("acknowledge success")
