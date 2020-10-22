@@ -4,37 +4,37 @@ ext {
     targetSdkVer = 28
 
     versionCode = 1
-    versionName = '2.2.0'
+    versionName = '3.0.0'
 
     // Kotlin
-    kotlinVer = '1.3.72'
+    kotlinVer = '1.4.10'
     androidKtxVer = '1.0.2'
 
     // Support library
     constraintLayout = '1.1.3'
 
     // AndroidX
-    xAppCompatVer = '1.1.0'
+    xAppCompatVer = '1.2.0'
     xLifecycleVer = '2.2.0'
     xFragmentVer = '1.1.0-rc04'
     xRulesVer = '1.1.0-rc04'
     xRunnerVer = '1.1.0-rc04'
-    xTestVer = '1.2.0'
-    xExtVer = '1.1.1'
+    xTestVer = '1.3.0'
+    xExtVer = '1.1.2'
 
     // Reactive Extensions
-    rxJava2Ver = '2.2.19'
+    rxJava2Ver = '2.2.20'
     rxAndroid2Ver = '2.1.1'
 
     // Billing Client
-    billingClientVer = '2.2.0'
+    billingClientVer = '3.0.1'
 
     // Developer-related
     timberVer = '4.7.1'
 
     // Unit-tests
-    jUnitVer = '4.13'
-    mockitoVer = '3.3.3'
+    jUnitVer = '4.13.1'
+    mockitoVer = '3.5.15'
     mockitoKotlinVer = '2.1.0'
     jacocoVer = '0.1.2'
     assertJVer = '3.9.1'
