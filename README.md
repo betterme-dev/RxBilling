@@ -1,5 +1,5 @@
 # RxBilling
-Rx wrapper for Billing Library with connection management
+RxBilling is a simple wrapper above [Google Billing library](https://developer.android.com/google/play/billing/billing_library.html) with connection management
 
 # Download
  
@@ -9,10 +9,6 @@ Rx wrapper for Billing Library with connection management
     implementation 'com.android.billingclient:billing:$billingClientVer'
 
 # How to use
-
-## RxBilling
-RxBilling is a simple wrapper above [Google Billing library](https://developer.android.com/google/play/billing/billing_library.html).
-
 
 ## Connection management
 
