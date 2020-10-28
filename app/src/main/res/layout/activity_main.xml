@@ -10,13 +10,6 @@
         android:orientation="vertical"
         tools:context=".MainActivity">
 
-
-        <Button
-            android:id="@+id/btnLaunchServiceFlow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/launch_flow_service" />
-
         <TextView
             android:id="@+id/tvServiceFlow"
             android:layout_width="wrap_content"
