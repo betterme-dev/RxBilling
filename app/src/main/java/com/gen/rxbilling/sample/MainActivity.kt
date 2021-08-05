@@ -7,6 +7,7 @@ import com.gen.rxbilling.client.RxBilling
 import com.gen.rxbilling.client.RxBillingImpl
 import com.gen.rxbilling.connection.BillingClientFactory
 import com.gen.rxbilling.lifecycle.BillingConnectionManager
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
@@ -72,6 +73,7 @@ class MainActivity : AppCompatActivity() {
     private fun loadPurchases() {
         disposable.add(
                 rxBilling.getPurchases(BillingClient.SkuType.SUBS)
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             Timber.d("getPurchases $it")
                             tvPurchases.text = it.toString()
@@ -83,6 +85,7 @@ class MainActivity : AppCompatActivity() {
     private fun loadHistory() {
         disposable.add(
                 rxBilling.getPurchaseHistory(BillingClient.SkuType.SUBS)
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             Timber.d("getPurchaseHistory $it")
                             tvHistory.text = it.toString()
@@ -98,6 +101,7 @@ class MainActivity : AppCompatActivity() {
                                 .setSkusList(listOf("your_id1", "your_id2"))
                                 .setType(BillingClient.SkuType.SUBS)
                                 .build())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             Timber.d("loadDetails $it")
                             tvDetails.text = it.toString()

@@ -155,11 +155,15 @@ class RxBillingImpl(
     private fun getBoughtItems(@BillingClient.SkuType type: String): Single<List<Purchase>> {
         return connectionFlowable
                 .flatMapSingle {
-                    val purchasesResult = it.queryPurchases(type)
-                    return@flatMapSingle if (isSuccess(purchasesResult.responseCode)) {
-                        Single.just(purchasesResult.purchasesList.orEmpty())
-                    } else {
-                        Single.error(BillingException.fromResult(purchasesResult.billingResult))
+                    Single.create<List<Purchase>> { emitter ->
+                        it.queryPurchasesAsync(type) { billingResult, mutableList ->
+                            if (emitter.isDisposed) return@queryPurchasesAsync
+                            if (isSuccess(billingResult.responseCode)) {
+                                emitter.onSuccess(mutableList)
+                            } else {
+                                emitter.onError(BillingException.fromResult(billingResult))
+                            }
+                        }
                     }
                 }.firstOrError()
     }
