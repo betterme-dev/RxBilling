@@ -1,2 +1,2 @@
-include ':app', ':rxbilling'
+include ':app'
 include ':rxbilling3'

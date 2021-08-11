@@ -3,11 +3,11 @@ package com.gen.rxbilling.sample
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.android.billingclient.api.*
-import com.gen.rxbilling.client.RxBilling
-import com.gen.rxbilling.client.RxBillingImpl
-import com.gen.rxbilling.connection.BillingClientFactory
-import com.gen.rxbilling.lifecycle.BillingConnectionManager
-import io.reactivex.disposables.CompositeDisposable
+import com.gen.rxbilling3.client.RxBilling
+import com.gen.rxbilling3.client.RxBillingImpl
+import com.gen.rxbilling3.connection.BillingClientFactory
+import com.gen.rxbilling3.lifecycle.BillingConnectionManager
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
