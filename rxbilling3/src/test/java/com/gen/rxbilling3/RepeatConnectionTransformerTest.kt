@@ -1,9 +1,9 @@
-package com.gen.rxbilling
+package com.gen.rxbilling3
 
-import com.gen.rxbilling.connection.RepeatConnectionTransformer
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.schedulers.TestScheduler
+import com.gen.rxbilling3.connection.RepeatConnectionTransformer
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.schedulers.TestScheduler
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -82,7 +82,7 @@ class RepeatConnectionTransformerTest {
                 }, BackpressureStrategy.LATEST))
                 .compose(RepeatConnectionTransformer<Int>())
         val subscriber = flowable.test()
-        subscriber.dispose()
+        subscriber.cancel()
         subscriber.assertValueSequence(listOf(1))
         subscriber.assertNotComplete()
         assertTrue(cancelCalled)

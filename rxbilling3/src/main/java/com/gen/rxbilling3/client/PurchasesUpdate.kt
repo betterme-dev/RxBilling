@@ -1,4 +1,4 @@
-package com.gen.rxbilling.client
+package com.gen.rxbilling3.client
 
 import com.android.billingclient.api.Purchase
 

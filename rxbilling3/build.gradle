@@ -7,13 +7,12 @@ apply plugin: 'org.jetbrains.dokka-android'
 android {
 
     defaultConfig {
-        versionName "3.0.0"
+        versionName "4.0.0"
         minSdkVersion minSdkVer
         targetSdkVersion targetSdkVer
         compileSdkVersion compileSdkVer
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -36,11 +35,10 @@ dokka {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation developmentDependencies.timber
-    implementation dataDependencies.rxJava
-    implementation dataDependencies.rxAndroid
+    implementation dataDependencies.rxJava3
+    implementation dataDependencies.rxAndroid3
     implementation dataDependencies.billingClient
     implementation kotlinDependencies.kotlinStdLib
 
@@ -53,7 +51,6 @@ dependencies {
     testImplementation testDependencies.jUnit
     testImplementation testDependencies.mockito
     testImplementation testDependencies.mockitoKotlin
-
 }
 
 task sourcesJar(type: Jar) {
@@ -79,6 +76,3 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())

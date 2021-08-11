@@ -1,4 +1,4 @@
-package com.gen.rxbilling.exception
+package com.gen.rxbilling3.exception
 
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingResult

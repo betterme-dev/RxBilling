@@ -1,17 +1,17 @@
-package com.gen.rxbilling.client
+package com.gen.rxbilling3.client
 
 import android.app.Activity
 import com.android.billingclient.api.*
 import com.android.billingclient.api.BillingClient.FeatureType
-import com.gen.rxbilling.connection.BillingClientFactory
-import com.gen.rxbilling.exception.BillingException
-import com.gen.rxbilling.lifecycle.Connectable
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.PublishSubject
+import com.gen.rxbilling3.connection.BillingClientFactory
+import com.gen.rxbilling3.exception.BillingException
+import com.gen.rxbilling3.lifecycle.Connectable
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 interface RxBilling : Connectable<BillingClient> {
 

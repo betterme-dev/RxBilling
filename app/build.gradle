@@ -31,15 +31,15 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':rxbilling')
+    implementation project(':rxbilling3')
 
     implementation kotlinDependencies.kotlinStdLib
     implementation dataDependencies.billingClient
     implementation presentationDependencies.lifecycleExtensions
     kapt presentationDependencies.lifecycleCompiler
     implementation developmentDependencies.timber
-    implementation dataDependencies.rxJava
-    implementation dataDependencies.rxAndroid
+    implementation dataDependencies.rxJava3
+    implementation dataDependencies.rxAndroid3
     implementation presentationDependencies.appCompat
 
     testImplementation testDependencies.jUnit

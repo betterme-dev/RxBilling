@@ -1,14 +1,14 @@
-package com.gen.rxbilling.connection
+package com.gen.rxbilling3.connection
 
 import android.content.Context
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.PurchasesUpdatedListener
-import com.gen.rxbilling.exception.BillingException
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.FlowableTransformer
+import com.gen.rxbilling3.exception.BillingException
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.FlowableTransformer
 import timber.log.Timber
 
 class BillingClientFactory(

@@ -1,9 +1,9 @@
-package com.gen.rxbilling.lifecycle
+package com.gen.rxbilling3.lifecycle
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.disposables.Disposable
 import timber.log.Timber
 
 class BillingConnectionManager<T>(
