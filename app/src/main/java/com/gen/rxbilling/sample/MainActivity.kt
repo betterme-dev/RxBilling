@@ -16,6 +16,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rxBilling: RxBilling
     private val disposable = CompositeDisposable()
 
+    private val productDetailsParams = QueryProductDetailsParams.newBuilder()
+        .setProductList(
+            listOf(
+                QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId("your_id1").setProductType(BillingClient.ProductType.SUBS)
+                    .build(),
+
+                QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId("your_id2").setProductType(BillingClient.ProductType.SUBS)
+                    .build()
+            )
+        ).build()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -59,19 +72,31 @@ class MainActivity : AppCompatActivity() {
 
     private fun startFlowWithClient() {
         disposable.add(
-                rxBilling.launchFlow(this, BillingFlowParams.newBuilder()
-                        .setSkuDetails(SkuDetails("{}"))
-                        .build())
-                        .subscribe({
-                            Timber.d("startFlowWithClient")
-                        }, {
-                            Timber.e(it)
-                        }))
+            rxBilling.getProductDetails(productDetailsParams)
+                .flatMapCompletable { productDetails ->
+                    val productDetailsParamsList =
+                        listOf(
+                            BillingFlowParams.ProductDetailsParams.newBuilder()
+                                .setProductDetails(productDetails[0])
+                                .build()
+                        )
+
+                    val billingFlowParams =
+                        BillingFlowParams.newBuilder()
+                            .setProductDetailsParamsList(productDetailsParamsList)
+                            .build()
+
+                    rxBilling.launchFlow(this, billingFlowParams)
+            }.subscribe({
+                Timber.d("startFlowWithClient")
+            }, {
+                Timber.e(it)
+            }))
     }
 
     private fun loadPurchases() {
         disposable.add(
-                rxBilling.getPurchases(BillingClient.SkuType.SUBS)
+                rxBilling.getPurchases(BillingClient.ProductType.SUBS)
                         .subscribe({
                             Timber.d("getPurchases $it")
                             tvPurchases.text = it.toString()
@@ -82,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadHistory() {
         disposable.add(
-                rxBilling.getPurchaseHistory(BillingClient.SkuType.SUBS)
+                rxBilling.getPurchaseHistory(BillingClient.ProductType.SUBS)
                         .subscribe({
                             Timber.d("getPurchaseHistory $it")
                             tvHistory.text = it.toString()
@@ -93,17 +118,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadDetails() {
         disposable.add(
-                rxBilling.getSkuDetails(
-                        SkuDetailsParams.newBuilder()
-                                .setSkusList(listOf("your_id1", "your_id2"))
-                                .setType(BillingClient.SkuType.SUBS)
-                                .build())
-                        .subscribe({
-                            Timber.d("loadDetails $it")
-                            tvDetails.text = it.toString()
-                        }, {
-                            Timber.e(it)
-                        }))
+                rxBilling.getProductDetails(productDetailsParams)
+                    .subscribe({
+                        Timber.d("loadDetails $it")
+                        tvDetails.text = it.toString()
+                    }, {
+                        Timber.e(it)
+                    }))
     }
 
     private fun acknowledge() {
