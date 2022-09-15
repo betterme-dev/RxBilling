@@ -41,7 +41,7 @@ dependencies {
     implementation developmentDependencies.timber
     implementation dataDependencies.rxJava
     implementation dataDependencies.rxAndroid
-    implementation dataDependencies.billingClient
+    api dataDependencies.billingClient
     implementation kotlinDependencies.kotlinStdLib
 
     compileOnly presentationDependencies.lifecycleExtensions
