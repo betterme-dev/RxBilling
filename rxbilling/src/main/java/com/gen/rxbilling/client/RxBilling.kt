@@ -3,7 +3,6 @@ package com.gen.rxbilling.client
 import android.app.Activity
 import com.android.billingclient.api.*
 import com.android.billingclient.api.BillingClient.FeatureType
-import com.android.billingclient.api.BillingFlowParams.ProductDetailsParams
 import com.gen.rxbilling.connection.BillingClientFactory
 import com.gen.rxbilling.exception.BillingException
 import com.gen.rxbilling.lifecycle.Connectable
@@ -162,14 +161,14 @@ class RxBillingImpl(
                     ) { billingResult, purchases ->
                         if (it.isDisposed) return@queryPurchasesAsync
                         if (isSuccess(billingResult.responseCode)) {
-                            it.onSuccess(purchases.toList())
+                            it.onSuccess(purchases)
                         } else {
                             it.onError(BillingException.fromResult(billingResult))
                         }
                     }
                 }
             }
-            .singleOrError()
+            .firstOrError()
     }
 
     private fun getHistory(type: String): Single<List<PurchaseHistoryRecord>> {
