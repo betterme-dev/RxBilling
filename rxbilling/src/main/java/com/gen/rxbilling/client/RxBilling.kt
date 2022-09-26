@@ -171,7 +171,7 @@ class RxBillingImpl(
             .firstOrError()
     }
 
-    private fun getHistory(type: String): Single<List<PurchaseHistoryRecord>> {
+    private fun getHistory(@BillingClient.ProductType type: String): Single<List<PurchaseHistoryRecord>> {
         return connectionFlowable
                 .flatMapSingle { client ->
                     Single.create<List<PurchaseHistoryRecord>> {
