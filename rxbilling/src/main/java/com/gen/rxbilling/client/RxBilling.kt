@@ -21,11 +21,11 @@ interface RxBilling : Connectable<BillingClient> {
 
     fun observeUpdates(): Flowable<PurchasesUpdate>
 
-    fun getPurchases(@BillingClient.SkuType skuType: String): Single<List<Purchase>>
+    fun getPurchases(@BillingClient.ProductType productType: String): Single<List<Purchase>>
 
-    fun getPurchaseHistory(@BillingClient.SkuType skuType: String): Single<List<PurchaseHistoryRecord>>
+    fun getPurchaseHistory(@BillingClient.ProductType productType: String): Single<List<PurchaseHistoryRecord>>
 
-    fun getSkuDetails(params: SkuDetailsParams): Single<List<SkuDetails>>
+    fun getProductDetails(params: QueryProductDetailsParams): Single<List<ProductDetails>>
 
     fun launchFlow(activity: Activity, params: BillingFlowParams): Completable
 
@@ -73,23 +73,23 @@ class RxBillingImpl(
         }
     }
 
-    override fun getPurchases(@BillingClient.SkuType skuType: String): Single<List<Purchase>> {
-        return getBoughtItems(skuType)
+    override fun getPurchases(@BillingClient.ProductType productType: String): Single<List<Purchase>> {
+        return getBoughtItems(productType)
     }
 
-    override fun getPurchaseHistory(@BillingClient.SkuType skuType: String): Single<List<PurchaseHistoryRecord>> {
-        return getHistory(skuType)
+    override fun getPurchaseHistory(@BillingClient.ProductType productType: String): Single<List<PurchaseHistoryRecord>> {
+        return getHistory(productType)
     }
 
-    override fun getSkuDetails(params: SkuDetailsParams): Single<List<SkuDetails>> {
+    override fun getProductDetails(params: QueryProductDetailsParams): Single<List<ProductDetails>> {
         return connectionFlowable
                 .flatMapSingle { client ->
-                    Single.create<List<SkuDetails>> {
-                        client.querySkuDetailsAsync(params) { billingResult, skuDetailsList ->
-                            if (it.isDisposed) return@querySkuDetailsAsync
+                    Single.create<List<ProductDetails>> {
+                        client.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
+                            if (it.isDisposed) return@queryProductDetailsAsync
                             val responseCode = billingResult.responseCode
                             if (isSuccess(responseCode)) {
-                                it.onSuccess(skuDetailsList.orEmpty())
+                                it.onSuccess(productDetailsList)
                             } else {
                                 it.onError(BillingException.fromResult(billingResult))
                             }
@@ -152,23 +152,32 @@ class RxBillingImpl(
                 .ignoreElement()
     }
 
-    private fun getBoughtItems(@BillingClient.SkuType type: String): Single<List<Purchase>> {
+    private fun getBoughtItems(@BillingClient.ProductType type: String): Single<List<Purchase>> {
         return connectionFlowable
-                .flatMapSingle {
-                    val purchasesResult = it.queryPurchases(type)
-                    return@flatMapSingle if (isSuccess(purchasesResult.responseCode)) {
-                        Single.just(purchasesResult.purchasesList.orEmpty())
-                    } else {
-                        Single.error(BillingException.fromResult(purchasesResult.billingResult))
+            .flatMapSingle { client ->
+                Single.create<List<Purchase>> {
+                    client.queryPurchasesAsync(
+                        QueryPurchasesParams.newBuilder().setProductType(type).build()
+                    ) { billingResult, purchases ->
+                        if (it.isDisposed) return@queryPurchasesAsync
+                        if (isSuccess(billingResult.responseCode)) {
+                            it.onSuccess(purchases)
+                        } else {
+                            it.onError(BillingException.fromResult(billingResult))
+                        }
                     }
-                }.firstOrError()
+                }
+            }
+            .firstOrError()
     }
 
-    private fun getHistory(@BillingClient.SkuType type: String): Single<List<PurchaseHistoryRecord>> {
+    private fun getHistory(@BillingClient.ProductType type: String): Single<List<PurchaseHistoryRecord>> {
         return connectionFlowable
                 .flatMapSingle { client ->
                     Single.create<List<PurchaseHistoryRecord>> {
-                        client.queryPurchaseHistoryAsync(type) { billingResult: BillingResult, list: MutableList<PurchaseHistoryRecord>? ->
+                        client.queryPurchaseHistoryAsync(
+                            QueryPurchaseHistoryParams.newBuilder().setProductType(type).build()
+                        ) { billingResult: BillingResult, list: MutableList<PurchaseHistoryRecord>? ->
                             if (it.isDisposed) return@queryPurchaseHistoryAsync
                             val responseCode = billingResult.responseCode
                             if (isSuccess(responseCode)) {
