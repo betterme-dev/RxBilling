@@ -27,7 +27,7 @@ ext {
     rxAndroid2Ver = '2.1.1'
 
     // Billing Client
-    billingClientVer = '4.0.0'
+    billingClientVer = '5.0.0'
 
     // Developer-related
     timberVer = '4.7.1'
