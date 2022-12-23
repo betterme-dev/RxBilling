@@ -43,19 +43,22 @@ class BillingClientFactory(
                         }
                     } else {
                         if (billingClient.isReady) {
-                            billingClient.endConnection()//release resources if there are no observers
+                            // Release resources if there are no observers
+                            billingClient.endConnection()
                         }
                     }
                 }
             })
-            //finish connection when no subscribers
+            // Finish connection when no subscribers
             it.setCancellable {
                 Timber.d("endConnection")
                 if (billingClient.isReady) {
                     billingClient.endConnection()
                 }
             }
-        }, BackpressureStrategy.LATEST)
+        }, BackpressureStrategy.LATEST).doOnError {
+            Timber.e(it, "Failed to create billing client flowable!")
+        }
 
         return flowable.compose(transformer)
     }
