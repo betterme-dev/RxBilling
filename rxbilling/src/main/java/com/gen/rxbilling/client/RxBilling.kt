@@ -12,6 +12,7 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 
 interface RxBilling : Connectable<BillingClient> {
 
@@ -57,7 +58,10 @@ class RxBillingImpl(
     private val connectionFlowable =
             Completable.complete()
                     .observeOn(AndroidSchedulers.mainThread()) // just to be sure billing client is called from main thread
-                    .andThen(billingFactory.createBillingFlowable(updatedListener))
+                    .andThen(
+                        billingFactory.createBillingFlowable(updatedListener)
+                            .doOnError { Timber.e(it, "Failed to create billing connection flowable!") }
+                    )
 
     override fun connect(): Flowable<BillingClient> {
         return connectionFlowable
