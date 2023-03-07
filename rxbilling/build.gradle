@@ -7,7 +7,7 @@ apply plugin: 'org.jetbrains.dokka-android'
 android {
 
     defaultConfig {
-        versionName "3.0.0"
+        versionName "5.0.0"
         minSdkVersion minSdkVer
         targetSdkVersion targetSdkVer
         compileSdkVersion compileSdkVer
