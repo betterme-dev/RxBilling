@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-parcelize'
 
 android {
     defaultConfig {
@@ -21,11 +21,24 @@ android {
         }
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     dexOptions {
         preDexLibraries = false
         jumboMode = true
         javaMaxHeapSize "4g"
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlin {
+        jvmToolchain(11)
+    }
+    namespace 'com.gen.rxbilling.sample'
 
 }
 
