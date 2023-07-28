@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'com.google.devtools.ksp'
 
 android {
     defaultConfig {
         applicationId "com.gen.rxbilling.sample"
-        minSdkVersion minSdkVer
-        targetSdkVersion targetSdkVer
-        compileSdkVersion compileSdkVer
+        minSdk minSdkVer
+        targetSdk targetSdkVer
+        compileSdk compileSdkVer
         versionCode rootProject.extensions.getByName("ext")["versionCode"]
         versionName rootProject.extensions.getByName("ext")["versionName"]
         testInstrumentationRunner "androidx.test.ext.junit.runners.AndroidJUnit4"
@@ -32,12 +32,14 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
-
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = "11"
+    }
+    kotlin {
+        jvmToolchain(11)
     }
     namespace 'com.gen.rxbilling.sample'
 
@@ -50,7 +52,7 @@ dependencies {
     implementation kotlinDependencies.kotlinStdLib
     implementation dataDependencies.billingClient
     implementation presentationDependencies.lifecycleExtensions
-    kapt presentationDependencies.lifecycleCompiler
+    ksp presentationDependencies.lifecycleCompiler
     implementation developmentDependencies.timber
     implementation dataDependencies.rxJava
     implementation dataDependencies.rxAndroid

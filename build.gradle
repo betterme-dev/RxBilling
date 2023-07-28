@@ -1,6 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-apply from: 'dependencies.gradle'
-apply plugin: "com.hellofresh.gradle.deblibs"
+
+
+
 
 buildscript {
     repositories {
@@ -9,16 +10,23 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0"
+        classpath 'com.android.tools.build:gradle:8.1.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10"
         classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.16"
         classpath "com.hellofresh.gradle:deblibs:2.2.0"
         classpath "com.github.ben-manes:gradle-versions-plugin:0.47.0"
+//        classpath "com.google.devtools.ksp:1.8.10-1.0.9"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
+
+plugins {
+    id 'com.google.devtools.ksp' version '1.8.10-1.0.9' apply false
+}
+apply from: 'dependencies.gradle'
+apply plugin: "com.hellofresh.gradle.deblibs"
 
 allprojects {
     repositories {

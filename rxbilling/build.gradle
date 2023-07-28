@@ -1,15 +1,15 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'org.jetbrains.dokka-android'
+apply plugin: 'com.google.devtools.ksp'
 
 android {
 
     defaultConfig {
-        minSdkVersion minSdkVer
-        targetSdkVersion targetSdkVer
-        compileSdkVersion compileSdkVer
+        minSdk minSdkVer
+        targetSdk targetSdkVer
+        compileSdk compileSdkVer
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -27,15 +27,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
-
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = "11"
+    }
+    kotlin {
+        jvmToolchain(11)
     }
     namespace 'com.gen.rxbilling'
-
 }
 
 dokka {
@@ -56,7 +57,7 @@ dependencies {
     compileOnly presentationDependencies.lifecycleRuntime
     compileOnly presentationDependencies.lifecycleExtensions
 
-    kapt presentationDependencies.lifecycleCompiler
+    ksp presentationDependencies.lifecycleCompiler
 
     testImplementation testDependencies.jUnit
     testImplementation testDependencies.mockito
