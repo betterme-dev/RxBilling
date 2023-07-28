@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'org.jetbrains.dokka-android'
-apply plugin: 'com.google.devtools.ksp'
 
 android {
 
@@ -57,7 +57,7 @@ dependencies {
     compileOnly presentationDependencies.lifecycleRuntime
     compileOnly presentationDependencies.lifecycleExtensions
 
-    ksp presentationDependencies.lifecycleCompiler
+    kapt presentationDependencies.lifecycleCompiler
 
     testImplementation testDependencies.jUnit
     testImplementation testDependencies.mockito

@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'com.google.devtools.ksp'
 
 android {
     defaultConfig {
@@ -52,7 +52,7 @@ dependencies {
     implementation kotlinDependencies.kotlinStdLib
     implementation dataDependencies.billingClient
     implementation presentationDependencies.lifecycleExtensions
-    ksp presentationDependencies.lifecycleCompiler
+    kapt presentationDependencies.lifecycleCompiler
     implementation developmentDependencies.timber
     implementation dataDependencies.rxJava
     implementation dataDependencies.rxAndroid
