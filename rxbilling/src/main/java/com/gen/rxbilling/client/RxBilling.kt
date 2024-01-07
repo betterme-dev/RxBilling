@@ -4,9 +4,11 @@ import android.app.Activity
 import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClient.FeatureType
+import com.android.billingclient.api.BillingConfig
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ConsumeParams
+import com.android.billingclient.api.GetBillingConfigParams
 import com.android.billingclient.api.InAppMessageParams
 import com.android.billingclient.api.InAppMessageResult
 import com.android.billingclient.api.ProductDetails
@@ -58,6 +60,8 @@ interface RxBilling : Connectable<BillingClient> {
     fun consumeProduct(params: ConsumeParams): Completable
 
     fun acknowledge(params: AcknowledgePurchaseParams): Completable
+
+    fun getBillingConfig(): Single<BillingConfig>
 }
 
 class RxBillingImpl(
@@ -223,6 +227,25 @@ class RxBillingImpl(
             }
             .firstOrError()
             .ignoreElement()
+    }
+
+    override fun getBillingConfig(): Single<BillingConfig> {
+        return connectionFlowable
+            .flatMapSingle {
+                Single.create<BillingConfig> { emitter ->
+                    val params = GetBillingConfigParams
+                        .newBuilder()
+                        .build()
+                    it.getBillingConfigAsync(params) { billingResult, config ->
+                        if (emitter.isDisposed) return@getBillingConfigAsync
+                        if (isSuccess(billingResult.responseCode) && config != null) {
+                            emitter.onSuccess(config)
+                        } else {
+                            emitter.onError(BillingException.fromResult(billingResult))
+                        }
+                    }
+                }
+            }.firstOrError()
     }
 
     private fun getBoughtItems(@BillingClient.ProductType type: String): Single<List<Purchase>> {
