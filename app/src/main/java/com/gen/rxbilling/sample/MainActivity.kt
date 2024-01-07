@@ -6,9 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingFlowParams
-import com.android.billingclient.api.BillingFlowParams.ProrationMode.IMMEDIATE_WITH_TIME_PRORATION
 import com.android.billingclient.api.BillingFlowParams.SubscriptionUpdateParams.ReplacementMode
-import com.android.billingclient.api.InAppMessageParams
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.gen.rxbilling.client.RxBilling
 import com.gen.rxbilling.client.RxBillingImpl

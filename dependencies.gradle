@@ -15,7 +15,7 @@ ext {
 
     // AndroidX
     xAppCompatVer = '1.6.1'
-    xLifecycleVer = '2.6.1'
+    xLifecycleVer = '2.6.2'
     xFragmentVer = '1.1.0-rc04'
     xRulesVer = '1.1.0-rc04'
     xRunnerVer = '1.1.0-rc04'
@@ -25,14 +25,14 @@ ext {
     rxAndroid2Ver = '2.1.1'
 
     // Billing Client
-    billingClientVer = '6.0.1'
+    billingClientVer = '6.1.0'
 
     // Developer-related
     timberVer = '5.0.1'
 
     // Unit-tests
     jUnitVer = '4.13.2'
-    mockitoVer = '5.4.0'
+    mockitoVer = '5.8.0'
     jacocoVer = '0.1.2'
     assertJVer = '3.9.1'
 
