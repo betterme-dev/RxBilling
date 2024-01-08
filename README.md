@@ -5,7 +5,7 @@ RxBilling is a simple wrapper above [Google Billing library](https://developer.a
  
  [![](https://jitpack.io/v/betterme-dev/RxBilling.svg)](https://jitpack.io/#betterme-dev/RxBilling)
 
-    implementation 'com.betterme:rxbilling:$latestVersion'
+    implementation 'com.github.betterme-dev:RxBilling:$latestVersion'
     implementation 'com.android.billingclient:billing:$billingClientVer'
 
 # How to use
