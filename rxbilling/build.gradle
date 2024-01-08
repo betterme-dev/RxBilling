@@ -49,10 +49,9 @@ dependencies {
     implementation dataDependencies.rxAndroid
     implementation dataDependencies.billingClient
     implementation kotlinDependencies.kotlinStdLib
+    implementation presentationDependencies.lifecycleExtensions
 
-    compileOnly presentationDependencies.lifecycleExtensions
     compileOnly presentationDependencies.lifecycleRuntime
-    compileOnly presentationDependencies.lifecycleExtensions
 
     kapt presentationDependencies.lifecycleCompiler
 

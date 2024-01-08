@@ -54,6 +54,7 @@ dependencies {
     implementation dataDependencies.rxJava
     implementation dataDependencies.rxAndroid
     implementation presentationDependencies.appCompat
+    implementation presentationDependencies.activityKtx
 
     testImplementation testDependencies.jUnit
     testImplementation testDependencies.mockito

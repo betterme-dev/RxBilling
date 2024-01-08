@@ -1,7 +1,7 @@
 ext {
-    compileSdkVer = 33
-    minSdkVer = 14
-    targetSdkVer = 33
+    compileSdkVer = 34
+    minSdkVer = 19
+    targetSdkVer = 34
 
     versionCode = 1
     versionName = '6.0.1'
@@ -16,7 +16,7 @@ ext {
     // AndroidX
     xAppCompatVer = '1.6.1'
     xLifecycleVer = '2.6.2'
-    xFragmentVer = '1.1.0-rc04'
+    xFragmentVer = '1.6.2'
     xRulesVer = '1.1.0-rc04'
     xRunnerVer = '1.1.0-rc04'
 
@@ -43,7 +43,8 @@ ext {
             fragment           : "androidx.fragment:fragment:$xFragmentVer",
             lifecycleRuntime   : "androidx.lifecycle:lifecycle-runtime:$xLifecycleVer",
             lifecycleCompiler  : "androidx.lifecycle:lifecycle-compiler:$xLifecycleVer",
-            lifecycleExtensions: "androidx.lifecycle:lifecycle-runtime-ktx:$xLifecycleVer"
+            lifecycleExtensions: "androidx.lifecycle:lifecycle-runtime-ktx:$xLifecycleVer",
+            activityKtx        : "androidx.activity:activity-ktx:1.8.2",
     ]
 
     kotlinDependencies = [
