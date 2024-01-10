@@ -1,6 +1,6 @@
 ext {
     compileSdkVer = 28
-    minSdkVer = 14
+    minSdkVer = 19
     targetSdkVer = 28
 
     versionCode = 1
@@ -27,7 +27,7 @@ ext {
     rxAndroid2Ver = '2.1.1'
 
     // Billing Client
-    billingClientVer = '5.0.0'
+    billingClientVer = '6.1.0'
 
     // Developer-related
     timberVer = '4.7.1'

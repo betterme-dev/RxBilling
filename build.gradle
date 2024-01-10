@@ -3,7 +3,7 @@ apply from: 'dependencies.gradle'
 apply plugin: "com.hellofresh.gradle.deblibs"
 
 buildscript {
-    ext.kotlin_version = '1.4.10'
+    ext.kotlin_version = '1.7.20'
     ext.dokka_version = '0.9.16'
     repositories {
         maven { url 'https://plugins.gradle.org/m2/' }
@@ -11,7 +11,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.2'
+        classpath 'com.android.tools.build:gradle:7.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokka_version"
         classpath "com.hellofresh.gradle:deblibs:2.2.0"
