@@ -1,41 +1,38 @@
 ext {
-    compileSdkVer = 28
-    minSdkVer = 14
-    targetSdkVer = 28
+    compileSdkVer = 34
+    minSdkVer = 19
+    targetSdkVer = 34
 
     versionCode = 1
-    versionName = '3.0.1'
+    versionName = '6.1.0'
 
     // Kotlin
-    kotlinVer = '1.4.10'
+    kotlinVer = '1.8.0'
     androidKtxVer = '1.0.2'
 
     // Support library
     constraintLayout = '1.1.3'
 
     // AndroidX
-    xAppCompatVer = '1.2.0'
-    xLifecycleVer = '2.2.0'
-    xFragmentVer = '1.1.0-rc04'
+    xAppCompatVer = '1.6.1'
+    xLifecycleVer = '2.6.2'
+    xFragmentVer = '1.6.2'
     xRulesVer = '1.1.0-rc04'
     xRunnerVer = '1.1.0-rc04'
-    xTestVer = '1.3.0'
-    xExtVer = '1.1.2'
 
     // Reactive Extensions
-    rxJava2Ver = '2.2.20'
+    rxJava2Ver = '2.2.21'
     rxAndroid2Ver = '2.1.1'
 
     // Billing Client
-    billingClientVer = '3.0.1'
+    billingClientVer = '6.1.0'
 
     // Developer-related
-    timberVer = '4.7.1'
+    timberVer = '5.0.1'
 
     // Unit-tests
-    jUnitVer = '4.13.1'
-    mockitoVer = '3.5.15'
-    mockitoKotlinVer = '2.1.0'
+    jUnitVer = '4.13.2'
+    mockitoVer = '5.8.0'
     jacocoVer = '0.1.2'
     assertJVer = '3.9.1'
 
@@ -46,7 +43,8 @@ ext {
             fragment           : "androidx.fragment:fragment:$xFragmentVer",
             lifecycleRuntime   : "androidx.lifecycle:lifecycle-runtime:$xLifecycleVer",
             lifecycleCompiler  : "androidx.lifecycle:lifecycle-compiler:$xLifecycleVer",
-            lifecycleExtensions: "androidx.lifecycle:lifecycle-extensions:$xLifecycleVer"
+            lifecycleExtensions: "androidx.lifecycle:lifecycle-runtime-ktx:$xLifecycleVer",
+            activityKtx        : "androidx.activity:activity-ktx:1.8.2",
     ]
 
     kotlinDependencies = [
@@ -68,11 +66,11 @@ ext {
     testDependencies = [
             jUnit        : "junit:junit:$jUnitVer",
             mockito      : "org.mockito:mockito-core:$mockitoVer",
-            mockitoKotlin: "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVer",
+            mockitoKotlin: "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0",
             assertJ      : "org.assertj:assertj-core:$assertJVer",
             mockitoInline: "org.mockito:mockito-inline:$mockitoVer",
-            runner       : "androidx.test:runner:$xTestVer",
-            rules        : "androidx.test:rules:$xTestVer",
-            ext          : "androidx.test.ext:junit:$xExtVer"
+            runner       : "androidx.test:runner:1.5.2",
+            rules        : "androidx.test:rules:1.5.0",
+            ext          : "androidx.test.ext:junit:1.1.5"
     ]
 }

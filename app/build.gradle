@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-parcelize'
 
 android {
     defaultConfig {
         applicationId "com.gen.rxbilling.sample"
-        minSdkVersion minSdkVer
-        targetSdkVersion targetSdkVer
-        compileSdkVersion compileSdkVer
+        minSdk minSdkVer
+        targetSdk targetSdkVer
+        compileSdk compileSdkVer
         versionCode rootProject.extensions.getByName("ext")["versionCode"]
         versionName rootProject.extensions.getByName("ext")["versionName"]
         testInstrumentationRunner "androidx.test.ext.junit.runners.AndroidJUnit4"
@@ -21,11 +21,24 @@ android {
         }
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     dexOptions {
         preDexLibraries = false
         jumboMode = true
         javaMaxHeapSize "4g"
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+    namespace 'com.gen.rxbilling.sample'
 
 }
 
@@ -41,6 +54,7 @@ dependencies {
     implementation dataDependencies.rxJava
     implementation dataDependencies.rxAndroid
     implementation presentationDependencies.appCompat
+    implementation presentationDependencies.activityKtx
 
     testImplementation testDependencies.jUnit
     testImplementation testDependencies.mockito

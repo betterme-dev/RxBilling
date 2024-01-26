@@ -1,16 +1,15 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'org.jetbrains.dokka-android'
 
 android {
 
     defaultConfig {
-        versionName "3.0.0"
-        minSdkVersion minSdkVer
-        targetSdkVersion targetSdkVer
-        compileSdkVersion compileSdkVer
+        minSdk minSdkVer
+        targetSdk targetSdkVer
+        compileSdk compileSdkVer
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -27,7 +26,14 @@ android {
             }
         }
     }
-
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+    namespace 'com.gen.rxbilling'
 }
 
 dokka {
@@ -43,10 +49,9 @@ dependencies {
     implementation dataDependencies.rxAndroid
     implementation dataDependencies.billingClient
     implementation kotlinDependencies.kotlinStdLib
+    implementation presentationDependencies.lifecycleExtensions
 
-    compileOnly presentationDependencies.lifecycleExtensions
     compileOnly presentationDependencies.lifecycleRuntime
-    compileOnly presentationDependencies.lifecycleExtensions
 
     kapt presentationDependencies.lifecycleCompiler
 
@@ -76,7 +81,6 @@ task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
     from javadoc.destinationDir
 }
 artifacts {
-    archives javadocJar
     archives sourcesJar
 }
 
